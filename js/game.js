@@ -55,12 +55,6 @@ function in_turn()
 function set_turn(flag)
 {
     inturn = flag;
-    if(flag)
-    {
-        console.log("inturn!");
-        if(inAIMode())
-			AIAct('r');
-    }
 }
 
 function turn_exchange()
@@ -524,6 +518,13 @@ function gameStart()
     chosen = null;
     ingame = true;
     initChessBoard();
+    //the first step in game
+    if(inturn)
+    {
+        console.log("inturn!");
+        if(inAIMode())
+			AIAct('r');
+    }
 }
 
 function initChessBoard()
