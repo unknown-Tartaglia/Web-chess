@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>中国象棋</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="icon" href="images/icon.png">
+</head>
+<body>
+
+<div class="console">
+	<button onmouseenter="tipsAppear()" onmouseleave="tipsDisappear()"> 提示</button>
+	<p id="change" style="visibility: hidden;background: white;"> 点击匹配可以与其他玩家对战，也可以选择与AI对战 </p>
+	<button onclick="match()" name="match" id = "b0"> 匹配 </button>
+	<br>
+	<button onclick="AI1()" name="AI1" id = "b1"> 新手 </button>
+	<br>
+	<button onclick="AI2()" name="AI2" id = "b2"> 普通 </button>
+	<br>
+	<button onclick="AI3()" name="AI3" id = "b3"> 高手 </button>
+	<br>
+	<button onclick="AI4()" name="AI4" id = "b4"> 大师 </button>
+</div>
+
+<div class="game">
+	<h1> 中国象棋简易版 </h1>
+	<div class="chessboard">
+		<canvas class="board" id="board">
+		</canvas>
+	</div>
+	<p id="onlineNum"></p>
+</div>
+
+<div class="bgm">
+	<label for="volume"> 音量 </label>
+	<input type="range" min="0" max="100" step="1" value="50" id="volume" oninput="changeVolume()">
+	<label for="volume" id="volumeText"> 50 </label>
+	<button id="music" onclick="bgmReset()"> 开启BGM </button>
+</div>
+
+<div class="b_clock"> 
+	<p class="usr" id="b_usr"> r_usr </p>
+	<p class="time" id="b_time"> 90s </p>
+</div>
+<div class="r_clock"> 
+	<p class="usr" id="r_usr"> b_usr </p>
+	<p class="time" id="r_time"> 90s </p>
+</div>
+
+<div class="chatbar">
+	<div class="chathistory" id="worldwindow">
+		<h2 class="chatbartitle"> 世界频道 </h2>
+		<p class="name"> A: </p>
+		<p class="content"> 你好！</p>
+		<p class="name"> B: </p>
+		<p class="content"> 你好！</p>
+	</div>
+	<div class="chathistory" id="roomwindow" style="visibility: hidden;">
+		<h2 class="chatbartitle"> 房间频道 </h2>
+	</div>
+	<div class="chathistory" id="systemwindow" style="visibility: hidden;">
+		<h2 class="chatbartitle"> 系统频道 </h2>
+	</div>
+	<div class="switch">
+		<div onclick="clickSystem()" id="system"> 系统 </div>
+		<div onclick="clickRoom()" id="room"> 房间 </div>
+		<div onclick="clickWorld()" id="world"> 世界 </div>
+	</div>
+	<form id="form">
+		<textarea cols="40" rows="6" placeholder="和对手说两句吧" name="text" id="text"></textarea>
+		<br>
+		<!--<input type="button" value="发送" onclick="loadXMLDoc(document.getElementById('text').value)">-->
+		<input type="button" value="发送" onclick="sendMessage()">
+	</form>
+</div> 
+
+<div class="matching" id="matching">
+	<p class="matchingPrompt" style="background: white;"> 正在为您匹配势均力敌的对手... </p>
+	<p class="matchingPrompt" id="timing"> </p>
+	<button onclick="cancelMatch(true)" id="cancel"> 取消 </button>
+</div>
+
+<div class="matching" id="matchingSuccessBar">
+	<p id="matchSuccess"> \匹配成功/ </p>
+</div>
+
+<script src="js/tips.js"> </script>
+<script src="js/match.js"> </script>
+<script src="js/websocket.js"> </script>
+<script src="js/sendMethod.js"> </script>
+<script src="js/game.js"> </script>
+<script src="js/AI.js"> </script>
+<script src="js/sound.js"> </script>
+<script src="js/chatRoom.js"> </script>
+</body>
+</html>
