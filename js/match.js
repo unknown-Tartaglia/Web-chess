@@ -58,7 +58,7 @@ function timingForward()
 {
     if(!inMatch)
         return;
-    if(time < 100)
+    if(time < 60)
     {
         document.getElementById("timing").innerHTML = time + 's';
         time++;
@@ -66,7 +66,9 @@ function timingForward()
     }
     else
     {
-        //TODO:自动匹配人机
+        //自动匹配人机
+        cancelMatch(true);
+        sendAIRequest(0);
     }
 }
 

@@ -21,7 +21,6 @@ function AI(level)
         return;
     }
     sendAIRequest(level);
-    AIop = true;
 }
 function AI1()
 {
@@ -121,7 +120,7 @@ function AIAct(color)
         k = list[key * 2];
         l = list[key * 2 + 1];
         
-        sleep(10).then(() => {
+        sleep(50).then(() => {
             sendClickEvent(i, j);
         })
         sleep(100).then(() => {

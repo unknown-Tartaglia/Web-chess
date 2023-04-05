@@ -89,8 +89,9 @@ function sendAIRequest(level)
 {
 	// TODO: remote version
 
-	// TODO: local version
-	initRoom();
-	gameStart();
+	// local version
 	set_turn(true);
+	setAIop(true);
+	initRoom();
+	matchSuccess();
 }

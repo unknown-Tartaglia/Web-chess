@@ -349,6 +349,12 @@ while (true) {
                 if($client['socket'] === $socket)
                 {
                     echo "Client {{$client['socket']} : {$client['name']}} disconnected.\n";
+                    // 取消匹配
+                    if($waiting_list !== null && $waiting_list['socket'] === $socket)
+                    {
+                        echo "{$waiting_list['name']} cancel match\n";
+                        $waiting_list = null;
+                    }
 
                     // 比赛断连
                     foreach($room_list as $room_key => $room)
@@ -422,7 +428,7 @@ while (true) {
                 // 处理cheatmode
                 else if($request_type === '02')
                 {
-                    //TODO: 
+                    //TODO: cheatmode
                 }
                 // 处理匹配请求
                 else if($request_type === '11')

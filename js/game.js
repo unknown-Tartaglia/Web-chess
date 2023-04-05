@@ -458,8 +458,6 @@ function clickEvent(e)
     if(distance(e.layerX, e.layerY, row, col) < 24)
     {
         console.log("点击" + chessBoard[row][col]);
-        //TODO:
-        //chessClear(row, col);
         if(inturn)
         {
             //选子
