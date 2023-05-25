@@ -1,299 +1,64 @@
-var startStateChessBoard = [
-    ["b_c", "b_m", "b_x", "b_s", "b_j", "b_s", "b_x", "b_m", "b_c"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["s", "b_p", "s", "s", "s", "s", "s", "b_p", "s"],
-    ["b_z", "s", "b_z", "s", "b_z", "s", "b_z", "s", "b_z"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["r_z", "s", "r_z", "s", "r_z", "s", "r_z", "s", "r_z"],
-    ["s", "r_p", "s", "s", "s", "s", "s", "r_p", "s"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["r_c", "r_m", "r_x", "r_s", "r_j", "r_s", "r_x", "r_m", "r_c"]
-];
+var game = game || {};
 
-var chessBoard = [
-    ["b_c", "b_m", "b_x", "b_s", "b_j", "b_s", "b_x", "b_m", "b_c"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["s", "b_p", "s", "s", "s", "s", "s", "b_p", "s"],
-    ["b_z", "s", "b_z", "s", "b_z", "s", "b_z", "s", "b_z"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["r_z", "s", "r_z", "s", "r_z", "s", "r_z", "s", "r_z"],
-    ["s", "r_p", "s", "s", "s", "s", "s", "r_p", "s"],
-    ["s", "s", "s", "s", "s", "s", "s", "s", "s"],
-    ["r_c", "r_m", "r_x", "r_s", "r_j", "r_s", "r_x", "r_m", "r_c"]
-];
+game.chessBoard =  [[null, null, null, null, null, null, null, null, null],
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null], 
+                    [null, null, null, null, null, null, null, null, null]];
+game.chess_m = [[2, 1, 1, 0], [2, -1, 1, 0], [-2, 1, -1, 0], [-2, -1, -1, 0], [1, 2, 0, 1], [1, -2, 0, -1], [-1, 2, 0, 1], [-1, -2, 0, -1]];
+game.chess_x = [[2, 2, 1, 1], [2, -2, 1, -1], [-2, 2, -1, 1], [-2, -2, -1, -1]];
+game.chess_s = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+game.chess_j = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+game.chess_z = [[-1, 0], [0, 1], [0, -1]];
+game.tot_m = 8;
+game.tot_x = 4;
+game.tot_s = 4;
+game.tot_j = 5;
+game.tot_z = 3;
+game.tot_c = 17;
+game.tot_p = 17;
+game.steps = [];
 
-var canvas=document.getElementById("board");
-canvas.width = 455;
-canvas.height = 565;
-var ctx=canvas.getContext("2d");
-/**
- * state flag
- */
-var inturn = false;
-var ingame = false;
-var chosen = null;
-var chess_m = [[2, 1, 1, 0], [2, -1, 1, 0], [-2, 1, -1, 0], [-2, -1, -1, 0], [1, 2, 0, 1], [1, -2, 0, -1], [-1, 2, 0, 1], [-1, -2, 0, -1]];
-var chess_x = [[2, 2, 1, 1], [2, -2, 1, -1], [-2, 2, -1, 1], [-2, -2, -1, -1]];
-var chess_s = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
-var chess_j = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-var chess_z = [[-1, 0], [0, 1], [0, -1]];
-var last_move_from = null;
-var last_move_to = null;
+game.isPlaying = false;
+game.isMyTurn = false;
+game.localPlay = true;
+game.AIMode = false;
 
-function in_game()
+game.enterAIMode = function()
 {
-    return ingame;
+    game.AIMode = true;
+    chatbar.writeSystem("进入AI模式");
+    if(game.isInTurn())
+        AI.AIAct('r');
 }
 
-function in_turn()
+game.exitAIMode = function()
 {
-    return inturn;
+    game.AIMode = false;
+    chatbar.writeSystem("退出AI模式");
 }
 
-function set_turn(flag)
-{
-    inturn = flag;
-}
-
-function turn_exchange()
-{
-    inturn = !inturn;
-    if(inturn == true)
-    {
-        console.log("inturn!");
-        if(inAIMode())
-			AIAct('r');
-    }
-}
-
-function pos_x(column)
-{
-    return column * 48 + 10;
-}
-
-function pos_y(row)
-{
-    return row * 50 + 68;
-}
-
-function distance(x, y, row, col)
-{
-    rx = col * 48 + 38;
-    ry = row * 50 + 110;
-    dis2 = (rx - x) * (rx - x) + (ry - y) * (ry - y);
-    return Math.sqrt(dis2);
-}
-
-// 绘图
-function draw(image, line, col, size = 52)
-{
-    let img = new Image();
-    img.src = "../images/" + image + ".png";
-    // 防止图片未加载出来导致显示失败
-    img.onload = function()
-    {
-        let x = pos_x(col) + (52 - size) / 2, y = pos_y(line) + (52 - size) / 2, offset = 1;
-        if(size !== 52) x += offset * (col - 4);
-        ctx.drawImage(img, x, y, size, size);
-    }
-    //console.log("draw " + chessBoard[line][col]);
-}
-
-function chessClear(row, col)
-{
-    ctx.clearRect(pos_x(col), pos_y(row), 52, 52);
-}
-
-// 移动正确性校验
-function validate_move(x, y, row, col)
-{
-    let color = chessBoard[x][y][0];
-    let chess = chessBoard[x][y][2];
-    let start, end, cnt, block_x, block_y;
-
-    // 判断是否吃自己的子
-    if(color === chessBoard[row][col][0])
-        return false;
-
-    // 车
-    if(chess === 'c')
-    {
-        if(x == row)
-        {
-            start = Math.min(y, col) + 1;
-            end = Math.max(y, col) - 1;
-            cnt = 0;
-            for(start; start <= end; start++)
-                if(chessBoard[x][start] !== 's')
-                    cnt++;
-            if(cnt == 0)
-                return true;
-        }
-        else if(y == col)
-        {
-            start = Math.min(x, row) + 1;
-            end = Math.max(x, row) - 1;
-            cnt = 0;
-            for(start; start <= end; start++)
-                if(chessBoard[start][y] !== 's')
-                    cnt++;
-            if(cnt == 0)
-                return true;
-        }
-    }
-    // 马
-    else if(chess === 'm')
-    {
-        // 别马腿
-        block_x = (x + row) / 2;
-        block_y = (y + col) / 2;
-        if(Math.floor(block_x) != block_x) block_x = x;
-        if(Math.floor(block_y) != block_y) block_y = y;
-        if(Math.abs(x - row) + Math.abs(y - col) == 3 && (Math.abs(x - row) == 1 || Math.abs(x - row) == 2) && chessBoard[block_x][block_y] === 's')
-            return true;
-    }
-    // 象
-    else if(chess === 'x')
-    {
-        //别象腿
-        block_x = (x + row) / 2;
-        block_y = (y + col) / 2;
-        if(Math.abs(x- row) == 2 && Math.abs(y - col) == 2 && x + row != 10 && x + row != 8 && chessBoard[block_x][block_y] === 's')
-            return true;
-    }
-    // 士
-    else if(chess === 's')
-    {
-        if(Math.abs(x - row) == 1 && Math.abs(y - col) == 1 && col >= 3 && col <= 5 && (row <= 2 || row >= 7))
-            return true;
-    }
-    // 将
-    else if(chess === 'j')
-    {
-        if(Math.abs(x - row) + Math.abs(y - col) == 1 && col >= 3 && col <= 5 && (row <= 2 || row >= 7))
-            return true;
-        // 飞将
-        if(y == col && chessBoard[row][col][2] === 'j')
-        {
-            start = Math.min(x, row) + 1;
-            end = Math.max(x, row) - 1;
-            cnt = 0;
-            for(start; start <= end; start++)
-                if(chessBoard[start][y] !== 's')
-                    cnt++;
-            if(cnt == 0)
-                return true;
-        }
-    }
-    // 炮
-    else if(chess === 'p')
-    {
-        if(x == row)
-        {
-            start = Math.min(y, col) + 1;
-            end = Math.max(y, col) - 1;
-            cnt = 0;
-            for(start; start <= end; start++)
-                if(chessBoard[x][start] !== 's')
-                    cnt++;
-            if(cnt == 0 && chessBoard[row][col] === 's'|| cnt == 1 && chessBoard[row][col] !== 's')
-                return true;
-        }
-        else if(y == col)
-        {
-            start = Math.min(x, row) + 1;
-            end = Math.max(x, row) - 1;
-            cnt = 0;
-            for(start; start <= end; start++)
-                if(chessBoard[start][y] !== 's')
-                    cnt++;
-            if(cnt == 0 && chessBoard[row][col] === 's'|| cnt == 1 && chessBoard[row][col] !== 's')
-                return true;
-        }
-    }
-    // 卒
-    else if(chess === 'z')
-    {
-        // 没过河
-        if(color === 'r' && x >= 5 || color === 'b' && x <= 4)
-        {
-            if(y == col)
-            {
-                // 不能向后
-                if(color === 'r' && x - row == 1)
-                    return true;
-                else if(color === 'b' && row - x == 1)
-                    return true;
-            }
-        }
-        // 过河
-        else
-        {
-            if(Math.abs(x - row) + Math.abs(y - col) === 1)
-            {
-                // 不能向后
-                if(color === 'b' && x - row != 1)
-                    return true;
-                else if(color === 'r' && row - x != 1)
-                    return true;
-            }
-        }
-    }
-    return false;
-}
-
-function chessMove(x, y, row, col)
-{
-    // 清除上一次的move痕迹
-    if(last_move_from !== null && last_move_to !== null)
-    {
-        chessClear(last_move_from[0], last_move_from[1]);
-        chessClear(last_move_to[0], last_move_to[1]);
-        // 恢复棋子
-        if(chessBoard[last_move_from[0]][last_move_from[1]][0] === 'b' || chessBoard[last_move_from[0]][last_move_from[1]][0] === 'r')
-            draw(chessBoard[last_move_from[0]][last_move_from[1]], last_move_from[0], last_move_from[1]);
-        if(chessBoard[last_move_to[0]][last_move_to[1]][0] === 'b' || chessBoard[last_move_to[0]][last_move_to[1]][0] === 'r')
-            draw(chessBoard[last_move_to[0]][last_move_to[1]], last_move_to[0], last_move_to[1]);
-    }
-
-    if(chessBoard[row][col][0] === 'b')
-        playSound('eat');
-    else
-        playSound('move');
-    
-    chessClear(x, y);
-    draw(chessBoard[x][y], row, col);
-    chessBoard[row][col] = chessBoard[x][y];
-    chessBoard[x][y] = "s";
-    last_move_from = x + '' + y;
-    last_move_to = row + '' + col;
-    draw("r_box", x, y);
-    draw("r_box", row, col);
-
-    //将军
-	if(checkmate())
-	{
-		playSound('alert');
-	}
-}
-
-// 检测将军
-function checkmate($room)
+game.checkMate = function()
 {
     // 红色方
     let r_j = null;
     for(let i = 7; i <= 9; i++)
         for(let j = 3; j <= 5; j++)
-            if(chessBoard[i][j] === 'r_j')
-                r_j = i + '' + j;
+            if(game.chessBoard[i][j] === 'r_j')
+                r_j = [i, j];
+    
+    console.assert(r_j !== null, "红帅不存在");
     
     for(let i = 0; i <= 9; i++)
         for(let j = 0; j <= 8; j++)
-            if(chessBoard[i][j][0] === 'b')
+            if(game.chessBoard[i][j][0] === 'b')
             {
-                if(validate_move(i , j, parseInt(r_j[0]), parseInt(r_j[1])))
+                if(game.validateMove(i , j, r_j[0], r_j[1]))
                     return true;
             }
     
@@ -301,87 +66,193 @@ function checkmate($room)
     let b_j = null;
     for(let i = 0; i <= 2; i++)
         for(let j = 3; j <= 5; j++)
-            if(chessBoard[i][j] === 'b_j')
-                b_j = i + '' + j;
+            if(game.chessBoard[i][j] === 'b_j')
+                b_j = [i, j];
+    
+    console.assert(b_j !== null, "黑将不存在");
     
     for(let i = 0; i <= 9; i++)
         for(let j = 0; j <= 8; j++)
-            if(chessBoard[i][j][0] === 'r')
+            if(game.chessBoard[i][j][0] === 'r')
             {
-                if(validate_move(i, j, parseInt(b_j[0]), parseInt(b_j[1])))
+                if(game.validateMove(i, j, b_j[0], b_j[1]))
                     return true;
             }
 
     return false;
 }
 
-function validateChoose(x, y)
+game.isInAIMode = function()
 {
-    let chess = chessBoard[x][y];
-    if(chess[0] === "r")
-        return true;
+    return game.AIMode;
+}
+
+game.isLocal = function()
+{
+    return game.localPlay;
+}
+
+game.setLocal = function(flag)
+{
+    game.localPlay = flag;
+}
+
+game.isInGame = function()
+{
+    return game.isPlaying;
+}
+
+game.isInTurn = function()
+{
+    return game.isMyTurn;
+}
+
+game.setTurn = function(turn)
+{
+    game.isMyTurn = turn;
+}
+
+game.exchangeTurn = function()
+{
+    game.isMyTurn = !game.isMyTurn;
+    if(game.checkMate())
+        xq.playSound('alert');
+
+    if(game.isInTurn() && game.isInAIMode())
+        AI.AIAct('r');
+}
+
+game.start = function()
+{
+    game.isPlaying = true;
+    game.steps = [];
+    game.initChessBoard();
+    cb.load();
+    chatbar.writeSystem("游戏开始");
+    if(game.isInTurn() && game.isInAIMode())
+        AI.AIAct('r');
+}
+
+game.initChessBoard = function()
+{
+    for(let i = 0; i <= 9; i++)
+        for(let j = 0; j <= 8; j++)
+            game.chessBoard[i][j] = initChessBoard[i][j];
+}
+
+game.stop = function()
+{
+    game.isPlaying = false;
+    cb.disload();
+    //回到世界并关闭房间
+    xq.clickWorld();
+    chatbar.roomReset();
+}
+
+game.validateChoose = function(x, y)
+{
+    let color = game.chessBoard[x][y][0];
+    if(game.isInTurn() && color === "r") return true;
+    if(AI.AIop === false && !game.isInTurn() && color === 'b') return true;
     return false;
 }
 
-function chooseEvent(x, y)
+//返回(x, y)处棋子可到达的位置列表,isAll => true: 包括敌方友方位置; false: 仅敌方
+game.destinations = function(x, y, isAll)
 {
-    let chess = chessBoard[x][y][2];
-    // 车，炮提示
+    if(game.chessBoard[x][y].length === 1) return [];
+    let color = game.chessBoard[x][y][0];
+    let chess = game.chessBoard[x][y][2];
+    let dest = [];
+
+    if(isAll) color = 'a';//it's tricky, please be careful.
+
+    // 车，炮
     if(chess === 'c' || chess === 'p')
     {
+        //下
         let i = x + 1;
-        while(i <= 9 && chessBoard[i][y] === 's')
+        while(i <= 9 && game.chessBoard[i][y] === 's')
         {
-            chessBoard[i][y] = 't';
-            draw("dot", i, y, 13);
+            dest.push([i, y]);
             i++;
         }
+        if(chess === 'p')
+        {
+            i++;
+            while(i <= 9 && game.chessBoard[i][y] === 's') i++;
+            if(i <= 9 && game.chessBoard[i][y][0] !== color) dest.push([i, y]);
+        }
+        else if(i <= 9 && game.chessBoard[i][y][0] !== color)
+            dest.push([i, y]);
+
+        //上
         i = x - 1;
-        while(i >= 0 && chessBoard[i][y] === 's')
+        while(i >= 0 && game.chessBoard[i][y] === 's')
         {
-            chessBoard[i][y] = 't';
-            draw("dot", i, y, 13);
+            dest.push([i, y]);
             i--;
         }
-        i = y + 1;
-        while(i <= 8 && chessBoard[x][i] === 's')
+        if(chess === 'p')
         {
-            chessBoard[x][i] = 't';
-            draw("dot", x, i, 13);
+            i--;
+            while(i >= 0 && game.chessBoard[i][y] === 's') i--;
+            if(i >= 0 && game.chessBoard[i][y][0] !== color) dest.push([i, y]);
+        }
+        else if(i >= 0 && game.chessBoard[i][y][0] !== color)
+            dest.push([i, y]);
+
+        //右
+        i = y + 1;
+        while(i <= 8 && game.chessBoard[x][i] === 's')
+        {
+            dest.push([x, i]);
             i++;
         }
-        i = y - 1;
-        while(i >= 0 && chessBoard[x][i] === 's')
+        if(chess === 'p')
         {
-            chessBoard[x][i] = 't';
-            draw("dot", x, i, 13);
+            i++;
+            while(i <= 8 && game.chessBoard[x][i] === 's') i++;
+            if(i <= 8 && game.chessBoard[x][i][0] !== color) dest.push([x, i]);
+        }
+        else if(i <= 8 && game.chessBoard[x][i][0] !== color)
+            dest.push([x, i]);
+
+
+        //左
+        i = y - 1;
+        while(i >= 0 && game.chessBoard[x][i] === 's')
+        {
+            dest.push([x, i]);
             i--;
         }
+        if(chess === 'p')
+        {
+            i--;
+            while(i >= 0 && game.chessBoard[x][i] === 's') i--;
+            if(i >= 0 && game.chessBoard[x][i][0] !== color) dest.push([x, i]);
+        }
+        else if(i >= 0 && game.chessBoard[x][i][0] !== color)
+            dest.push([x, i]);
     }
-    // 马提示
+    // 马
     else if(chess === 'm')
     {
         for(let i = 0; i < 8; i++)
         {
-            let row = x + chess_m[i][0], col = y + chess_m[i][1], block_x = x + chess_m[i][2], block_y = y + chess_m[i][3];
-            if(row >= 0 && row <= 9 && col >= 0 && col <= 8 && chessBoard[row][col] === 's' && chessBoard[block_x][block_y] === 's')
-            {
-                chessBoard[row][col] = 't';
-                draw("dot", row, col, 13);
-            }
+            let row = x + game.chess_m[i][0], col = y + game.chess_m[i][1], block_x = x + game.chess_m[i][2], block_y = y + game.chess_m[i][3];
+            if(row >= 0 && row <= 9 && col >= 0 && col <= 8 && game.chessBoard[row][col][0] !== color && game.chessBoard[block_x][block_y] === 's')
+                dest.push([row, col]);
         }
     }
-    // 象提示
+    // 象
     else if(chess === 'x')
     {
         for(let i = 0; i < 4; i++)
         {
-            let row = x + chess_x[i][0], col = y + chess_x[i][1], block_x = x + chess_x[i][2], block_y = y + chess_x[i][3];
-            if(row >= 5 && row <= 9 && col >= 0 && col <= 8 && chessBoard[row][col] === 's' && chessBoard[block_x][block_y] === 's')
-            {
-                chessBoard[row][col] = 't';
-                draw("dot", row, col, 13);
-            }
+            let row = x + game.chess_x[i][0], col = y + game.chess_x[i][1], block_x = x + game.chess_x[i][2], block_y = y + game.chess_x[i][3];
+            if(x + row !== 10 && x + row !== 8 && row >= 0 && row <= 9 && col >= 0 && col <= 8 && game.chessBoard[row][col][0] !== color && game.chessBoard[block_x][block_y] === 's')
+                dest.push([row, col]);
         }
     }
     // 士
@@ -389,12 +260,9 @@ function chooseEvent(x, y)
     {
         for(let i = 0; i < 4; i++)
         {
-            let row = x + chess_s[i][0], col = y + chess_s[i][1];
-            if(row >= 7 && row <= 9 && col >= 3 && col <= 5 && chessBoard[row][col] === 's')
-            {
-                chessBoard[row][col] = 't';
-                draw("dot", row, col, 13);
-            }
+            let row = x + game.chess_s[i][0], col = y + game.chess_s[i][1];
+            if(row + x !== 5 && row + x !== 13 && row >= 0 && row <= 9 && col >= 3 && col <= 5 && game.chessBoard[row][col][0] !== color)
+                dest.push([row, col]);
         }
     }
     // 将
@@ -402,140 +270,84 @@ function chooseEvent(x, y)
     {
         for(let i = 0; i < 4; i++)
         {
-            let row = x + chess_j[i][0], col = y + chess_j[i][1];
-            if(row >= 7 && row <= 9 && col >= 3 && col <= 5 && chessBoard[row][col] === 's')
-            {
-                chessBoard[row][col] = 't';
-                draw("dot", row, col, 13);
-            }
+            let row = x + game.chess_j[i][0], col = y + game.chess_j[i][1];
+            if(row + x !== 5 && row + x !== 13 && row >= 0 && row <= 9 && col >= 3 && col <= 5 && game.chessBoard[row][col][0] !== color)
+                dest.push([row, col]);
         }
+        let i = x - 1;
+        while(i >= 0 && game.chessBoard[i][y] === 's') i--;
+        if(i >= 0 && game.chessBoard[i][y].length === 3 && game.chessBoard[i][y][2] === 'j') dest.push([i, y]);
+        i = x + 1;
+        while(i <= 9 && game.chessBoard[i][y] === 's') i++;
+        if(i <= 9 && game.chessBoard[i][y].length === 3 && game.chessBoard[i][y][2] === 'j') dest.push([i, y]);
     }
     // 卒
     else if(chess === 'z')
     {
         // 没过河
-        if(x >= 5)
+        if(x >= 5 && game.chessBoard[x][y][0] === 'r' || x <= 4 && game.chessBoard[x][y][0] === 'b')
         {
-            if(chessBoard[x - 1][y] === 's')
+            if(x >= 5)
             {
-                chessBoard[x - 1][y] = 't';
-                draw("dot", x - 1, y, 13);
+                if(x >= 1 && game.chessBoard[x - 1][y][0] !== color)
+                    dest.push([x - 1, y]);
+            }
+            else
+            {
+                if(x <= 8 && game.chessBoard[x + 1][y][0] != color)
+                    dest.push([x + 1, y]);
             }
         }
         // 过河
         else
         {
-            for(let i = 0; i < 3; i++)
+            if(game.chessBoard[x][y][0] === 'r')
             {
-                let row = x + chess_z[i][0], col = y + chess_z[i][1];
-                if(row >= 0 && col >= 0 && col <= 8 && chessBoard[row][col] === 's')
+                for(let i = 0; i < 3; i++)
                 {
-                    chessBoard[row][col] = 't';
-                    draw("dot", row, col, 13);
-                }
-            }
-        }
-    }
-}
-
-function clearTips()
-{
-    for(let i = 0; i <= 9; i++)
-        for(let j = 0; j <= 8; j++)
-            if(chessBoard[i][j] === 't')
-            {
-                chessBoard[i][j] = 's';
-                chessClear(i, j);
-            }
-
-}
-
-function clickEvent(e)
-{
-    let row = parseInt((e.layerY - 86) / 50), col = parseInt((e.layerX - 10) / 48);
-
-    //console.log(row, col, e.layerX, e.layerY);
-    if(distance(e.layerX, e.layerY, row, col) < 24)
-    {
-        console.log("点击" + chessBoard[row][col]);
-        if(inturn)
-        {
-            //选子
-            if(chosen === null)
-            {
-                if(validateChoose(row, col))
-                {
-                    playSound('select');
-                    chosen = row + '' + col;
-                    chooseEvent(row, col);
-                    sendClickEvent(row, col);
+                    let row = x + game.chess_z[i][0], col = y + game.chess_z[i][1];
+                    if(row >= 0 && col >= 0 && col <= 8 && game.chessBoard[row][col] !== color)
+                        dest.push([row, col]);
                 }
             }
             else
             {
-                //重新选子
-                if(validateChoose(row, col))
-                {   
-                    playSound('select');
-                    clearTips();
-                    chosen = row + '' + col;
-                    chooseEvent(row, col);
-                    sendClickEvent(row, col);
-                }
-                //移动
-                else
+                for(let i = 0; i < 3; i++)
                 {
-                    chosen = null;
-                    if(chessBoard[row][col] === 't' || chessBoard[row][col][0] === 'b')
-                    {
-                        clearTips();
-                        sendClickEvent(row, col);
-                    }
-                    else clearTips();
+                    let row = x - game.chess_z[i][0], col = y + game.chess_z[i][1];
+                    if(row <= 9 && col >= 0 && col <= 8 && game.chessBoard[row][col] !== color)
+                        dest.push([row, col]);
                 }
             }
-                
         }
     }
+    return dest;
 }
 
-function canvasClear()
+game.validateMove = function(x, y, row, col)
 {
-    ingame = false;
-    setAIop(false);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if(!inAIMode())
-        canvas.removeEventListener('click', clickEvent);
-}
-
-function gameStart()
-{
-    //console.log("start");
-    last_move_from = null;
-    last_move_to = null;
-    chosen = null;
-    ingame = true;
-    initChessBoard();
-    //the first step in game
-    if(inturn)
+    let list = game.destinations(x, y);
+    for(let tar of list)
     {
-        console.log("inturn!");
-        if(inAIMode())
-			AIAct('r');
+        if(tar[0] === row && tar[1] === col)
+            return true;
     }
+    return false;
 }
 
-function initChessBoard()
+game.chessMove = function(x, y, row, col)
 {
-    for(let i = 0; i < 10; i++)
-        for(let j = 0; j < 9; j++)
-        {
-            chessBoard[i][j] = startStateChessBoard[i][j];
-            //绘制
-            if(chessBoard[i][j] === "s") continue;
-            draw(chessBoard[i][j], i, j);
-        }
-    //console.log("draw job done");
-    if(!inAIMode())
-        canvas.addEventListener('click', clickEvent);
+    cb.drawMove(x, y, row, col);
+
+    let color0 = game.chessBoard[x][y][0], color1 = game.chessBoard[row][col][0];
+
+    if(color1 !== 's')
+        xq.playSound('eat');
+    else
+        xq.playSound('move');
+    
+    game.chessBoard[row][col] = game.chessBoard[x][y];
+    game.chessBoard[x][y] = "s";
+
+    game.steps.push([color0, x, y, row, col]);
 }

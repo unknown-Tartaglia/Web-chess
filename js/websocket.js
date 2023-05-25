@@ -37,8 +37,8 @@
 
 */
 
-//const ws = new WebSocket('ws://172.27.133.139:12345');
-const ws = new WebSocket('ws://172.24.69.149:12345');
+//const ws = new WebSocket('ws://192.168.43.221:12345');
+const ws = new WebSocket('ws://localhost:12345');
 console.log("WebSocket request sent");
 
 // 监听 WebSocket 的 onmessage 事件
@@ -47,53 +47,53 @@ ws.onmessage = function(event) {
 	//世界聊天
 	if(type === '01')
 	{
-		chatRoomWrite("name", msg.split(" ")[0], 'world');
-		chatRoomWrite("content", msg.split(" ")[1], 'world');
+        let name = msg.split(" ")[0], content = msg.split(" ")[1];
+        chatbar.writeWorldName(name);
+        chatbar.writeWorldContent(content);
 	}
 	//房间聊天
 	else if(type === '02')
 	{
-		chatRoomWrite("name", msg.split(" ")[0], 'room');
-		chatRoomWrite("content", msg.split(" ")[1], 'room');
+        let name = msg.split(" ")[0], content = msg.split(" ")[1];
+		chatbar.writeRoomName(name);
+        chatbar.writeRoomContent(content);
 	}
 	//系统消息
 	else if(type === '03')
 	{
-		chatRoomWrite("sysinfo", '[系统]' + msg, 'system');
+		chatbar.writeSystem(msg);
 	}
 	//更新在线人数
 	else if(type === '00')
 	{
-		document.getElementById("onlineNum").innerHTML = "建议使用最新版Edge浏览器访问 <br> 当前在线人数：" + msg + "人";
+		xq.updateOnlineNum(msg);
 	}
 	//匹配成功
 	else if(type === '10')
 	{
-		cancelMatch(false);
+		xq.cancelMatch(false);
 		if(msg === '0')
-			set_turn(true);
+			game.setTurn(true);
 		else
-			set_turn(false);
+			game.setTurn(false);
+		xq.matchSuccess();
 		//进入房间
-		initRoom();
+		/*initRoom();
 		clickRoom();
-		matchSuccess();
+		matchSuccess();*/
 	}
 	//对方断线，比赛终止
 	else if(type === '11')
 	{
 		//console.log(event.data);
 		alert("对方掉线，比赛已终止");
-		canvasClear();
-		//回到世界并关闭房间
-		clickWorld();
-		initRoom();
+		game.stop();
 	}
 	//棋子移动
 	else if(type === '20')
 	{
-		chessMove(msg[0], msg[1], msg[2], msg[3]);
-		turn_exchange();
+		game.chessMove(msg[0], msg[1], msg[2], msg[3]);
+		game.exchangeTurn();
 	}
 	//游戏结束
 	else if(type === '21')
@@ -102,10 +102,7 @@ ws.onmessage = function(event) {
 			alert("你赢了！");
 		else if(msg === '0')
 			alert("你输了！")
-		canvasClear();
-		//回到世界并关闭房间
-		clickWorld();
-		initRoom();
+		game.stop();
 	}
 };
 
@@ -113,7 +110,7 @@ ws.onmessage = function(event) {
 ws.onopen = function(event) {
     // WebSocket 连接建立成功，发送自己的ip
     console.log("WebSocket connection established");
-	changeOnline(true);
+	xq.changeOnline(true);
     //ws.send(getIPAddress());
 };
 
@@ -121,14 +118,14 @@ ws.onopen = function(event) {
 ws.onerror = function(event) {
     // 发生错误，可以在这里进行相应的处理
     console.log("WebSocket error:", event);
-	changeOnline(false);
+	xq.changeOnline(false);
 };
 
 // 监听 WebSocket 的 onclose 事件
 ws.onclose = function(event) {
     // WebSocket 连接关闭，可以在这里进行相应的处理
     console.log("WebSocket closed:", event);
-	changeOnline(false);
+	xq.changeOnline(false);
 };
 
 // 获取公网ip
