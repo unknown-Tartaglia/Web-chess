@@ -27,8 +27,8 @@ function handshaking($newClient, $line){
     $upgrade  = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n" .
         "Upgrade: websocket\r\n" .
         "Connection: Upgrade\r\n" .
-        "WebSocket-Origin: 10.0.2.15\r\n" .
-        "WebSocket-Location: ws://10.0.2.15:12345/a.php\r\n".
+        "WebSocket-Origin: 0.0.0.0\r\n" .
+        "WebSocket-Location: ws://0.0.0.0:12345/server.php\r\n".
         "Sec-WebSocket-Accept:$secAccept\r\n\r\n";
     socket_write($newClient, $upgrade, strlen($upgrade));
 }
@@ -107,11 +107,9 @@ function validate_choose($x, $y, $room)
 }
 
 // 移动正确性校验
-function validate_move($row, $col, $room)
+function validate_move($x, $y, $row, $col, $room)
 {
     $player = $room['turn'];
-    $x = $room['chosen'][0];
-    $y = $room['chosen'][1];
     $color = $room['chess_board'][$x][$y][0];
     $chess = $room['chess_board'][$x][$y][2];
 
@@ -292,6 +290,7 @@ $online_num = 0;
 
 $log_user_list = false;
 
+echo "启动成功\n";
 
 
 while (true) {
@@ -414,16 +413,21 @@ while (true) {
                 else if($request_type === '01')
                 {
                     $message = "{$cur_client['name']}: {$request_msg}";
+                    $succ = false;
 
                     foreach($room_list as $room)
                     {
                         if($cur_client === $room['player1'] || $cur_client === $room['player2'])
                         {
+                            $succ = true;
                             echo "room{room['room_id']}: {{$message}}\n";
                             socket_write($room['player1']['socket'], frame("02" . $message));
                             socket_write($room['player2']['socket'], frame("02" . $message));
                         }
                     }
+
+                    if($succ === false)
+                        socket_write($cur_client['socket'], frame("02" . $message . "[发送失败，请先匹配进入房间]"));
                 }
                 // 处理cheatmode
                 else if($request_type === '02')
@@ -462,15 +466,22 @@ while (true) {
                     assert($waiting_list === $cur_client);
                     $waiting_list = null;
                 }
-                // 处理用户点击事件
+                // 处理用户移动事件
                 else if($request_type === '20')
                 {
-                    $row = $request_msg[0];
-                    $col = $request_msg[1];
+                    $x = $request_msg[0];
+                    $y = $request_msg[1];
+                    $row = $request_msg[2];
+                    $col = $request_msg[3];
                     // 输入校验
                     if($row < 0 || $row > 9 || $col < 0 || $col > 8 || floor($row) != $row || floor($col) != $col)
                     {
                         echo "bad input ($row, $col)\n";
+                        continue;
+                    }
+                    if($x < 0 || $x > 9 || $y < 0 || $y > 8 || floor($x) != $x || floor($y) != $y)
+                    {
+                        echo "bad input ($x, $y)\n";
                         continue;
                     }
                     foreach($room_list as $r_key => &$room)
@@ -479,71 +490,47 @@ while (true) {
                         // 翻转
                         if($room['turn'] == 'player2')
                         {
+                            $x = 9 - $x;
+                            $y = 8 - $y;
                             $row = 9 - $row;
                             $col = 8 - $col;
                         }
 
-                        // 选子
-                        if($room['chosen'] === null && validate_choose($row, $col, $room))
+                        // 移动
+                        if(validate_choose($x, $y, $room) && validate_move($x, $y, $row, $col, $room))
                         {
-                            $room['chosen'] = "$row$col";
-                            echo "{$cur_client['name']} choose ($row, $col)\n";
-                        }
-                        else if($room['chosen'] !== null)
-                        {
-                            // 更改选子
-                            if(validate_choose($row, $col, $room))
+                            // 胜利
+                            if($room['chess_board'][$row][$col] === "r_j" || $room['chess_board'][$row][$col] === "b_j" )
                             {
-                                $room['chosen'] = "$row$col";
-                                echo "{$cur_client['name']} choose ($row, $col)\n";
-                            }
-                            // 移动
-                            else
-                            {
-                                if(!validate_move($row, $col, $room))
+                                echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
+                                echo "{$cur_client['name']} win!\n";
+                                if($cur_client === $room['player1'])
                                 {
-                                    echo "{$cur_client['name']} unchoosed ({$room['chosen'][0]}, {$room['chosen'][1]})\n";
-                                    $room['chosen'] = null;
+                                    socket_write($room['player1']['socket'], frame("21" . '1'));
+                                    socket_write($room['player2']['socket'], frame("21" . '0'));
                                 }
                                 else
                                 {
-                                    // 胜利
-                                    if($room['chess_board'][$row][$col] === "r_j" || $room['chess_board'][$row][$col] === "b_j" )
-                                    {
-                                        echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
-                                        echo "{$cur_client['name']} win!\n";
-                                        if($cur_client === $room['player1'])
-                                        {
-                                            socket_write($room['player1']['socket'], frame("21" . '1'));
-                                            socket_write($room['player2']['socket'], frame("21" . '0'));
-                                        }
-                                        else
-                                        {
-                                            socket_write($room['player1']['socket'], frame("21" . '0'));
-                                            socket_write($room['player2']['socket'], frame("21" . '1'));
-                                        }
-                                        echo "disband room{$room['room_id']}: {{$room['player1']['name']}, {$room['player2']['name']}}\n";
-                                        unset($room_list[$r_key]);
-                                        continue;
-                                    }
-
-                                    $x = $room['chosen'][0];
-                                    $y = $room['chosen'][1];
-                                    send_move_msg($x, $y, $row, $col, $room);
-                                    $room['chosen'] = null;
-                                    $room['turn'] = "player" . (3 - $room['turn'][6]);
-                                    $room['chess_board'][$row][$col] = $room['chess_board'][$x][$y];
-                                    $room['chess_board'][$x][$y] = 's';
-                                    echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
-                                    socket_write($room['player1']['socket'], frame("03" . "($x,$y) -> ($row,$col)"));
-                                    // player2翻转
-                                    $x = 9 - $x;
-                                    $y = 8 - $y;
-                                    $row = 9 - $row;
-                                    $col = 8 - $col;
-                                    socket_write($room['player2']['socket'], frame("03" . "($x,$y) -> ($row,$col)"));
+                                    socket_write($room['player1']['socket'], frame("21" . '0'));
+                                    socket_write($room['player2']['socket'], frame("21" . '1'));
                                 }
+                                echo "disband room{$room['room_id']}: {{$room['player1']['name']}, {$room['player2']['name']}}\n";
+                                unset($room_list[$r_key]);
+                                continue;
                             }
+
+                            send_move_msg($x, $y, $row, $col, $room);
+                            $room['turn'] = "player" . (3 - $room['turn'][6]);
+                            $room['chess_board'][$row][$col] = $room['chess_board'][$x][$y];
+                            $room['chess_board'][$x][$y] = 's';
+                            echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
+                            socket_write($room['player1']['socket'], frame("03" . "($x,$y) -> ($row,$col)"));
+                            // player2翻转
+                            $x = 9 - $x;
+                            $y = 8 - $y;
+                            $row = 9 - $row;
+                            $col = 8 - $col;
+                            socket_write($room['player2']['socket'], frame("03" . "($x,$y) -> ($row,$col)"));
                         }
                     }
                     unset($room);

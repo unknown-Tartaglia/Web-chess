@@ -4,7 +4,7 @@ server code(towards server {server.php}):
     02: cheat mode
     10: cancel match
     11: match
-    20: click event
+    20: move event
 
 client code(towards client {onMessage}):
     00: update online number

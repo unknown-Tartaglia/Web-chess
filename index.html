@@ -9,17 +9,17 @@
 <body>
 
 <div class="console">
-	<button onmouseenter="tipsAppear()" onmouseleave="tipsDisappear()"> 提示</button>
+	<button onmouseenter="xq.tipsAppear()" onmouseleave="xq.tipsDisappear()"> 提示</button>
 	<p id="change" style="visibility: hidden;background: white;"> 点击匹配可以与其他玩家对战，也可以选择与AI对战 </p>
-	<button onclick="match()" name="match" id = "b0"> 匹配 </button>
+	<button onclick="xq.match()" name="match" id = "b0"> 匹配 </button>
 	<br>
-	<button onclick="AI1()" name="AI1" id = "b1"> 新手 </button>
+	<button onclick="xq.AI1()" name="AI1" id = "b1"> 普通 </button>
 	<br>
-	<button onclick="AI2()" name="AI2" id = "b2"> 普通 </button>
+	<button onclick="xq.AI2()" name="AI2" id = "b2"> 高手 </button>
 	<br>
-	<button onclick="AI3()" name="AI3" id = "b3"> 高手 </button>
+	<button onclick="xq.AI3()" name="AI3" id = "b3"> 大师 </button>
 	<br>
-	<button onclick="AI4()" name="AI4" id = "b4"> 大师 </button>
+	<button onclick="xq.local()" name="local" id = "b4"> 本地 </button>
 </div>
 
 <div class="game">
@@ -33,15 +33,16 @@
 
 <div class="bgm">
 	<label for="volume"> 音量 </label>
-	<input type="range" min="0" max="100" step="1" value="50" id="volume" oninput="changeVolume()">
+	<input type="range" min="0" max="100" step="1" value="50" id="volume" oninput="xq.changeVolume()">
 	<label for="volume" id="volumeText"> 50 </label>
-	<button id="music" onclick="bgmReset()"> 开启BGM </button>
+	<button id="music" onclick="xq.toggleBgm()"> 开启BGM </button>
 </div>
 
 <div class="b_clock"> 
 	<p class="usr" id="b_usr"> r_usr </p>
 	<p class="time" id="b_time"> 90s </p>
 </div>
+<button onclick="xq.regret()" name="regret" id="regret"> 悔棋 </button>
 <div class="r_clock"> 
 	<p class="usr" id="r_usr"> b_usr </p>
 	<p class="time" id="r_time"> 90s </p>
@@ -62,35 +63,34 @@
 		<h2 class="chatbartitle"> 系统频道 </h2>
 	</div>
 	<div class="switch">
-		<div onclick="clickSystem()" id="system"> 系统 </div>
-		<div onclick="clickRoom()" id="room"> 房间 </div>
-		<div onclick="clickWorld()" id="world"> 世界 </div>
+		<div onclick="xq.clickSystem()" id="system"> 系统 </div>
+		<div onclick="xq.clickRoom()" id="room"> 房间 </div>
+		<div onclick="xq.clickWorld()" id="world"> 世界 </div>
 	</div>
 	<form id="form">
 		<textarea cols="40" rows="6" placeholder="和对手说两句吧" name="text" id="text"></textarea>
 		<br>
 		<!--<input type="button" value="发送" onclick="loadXMLDoc(document.getElementById('text').value)">-->
-		<input type="button" value="发送" onclick="sendMessage()">
+		<input type="button" value="发送" onclick="xq.sendMessage()">
 	</form>
 </div> 
 
 <div class="matching" id="matching">
 	<p class="matchingPrompt" style="background: white;"> 正在为您匹配势均力敌的对手... </p>
 	<p class="matchingPrompt" id="timing"> </p>
-	<button onclick="cancelMatch(true)" id="cancel"> 取消 </button>
+	<button onclick="xq.cancelMatch(true)" id="cancel"> 取消 </button>
 </div>
 
 <div class="matching" id="matchingSuccessBar">
 	<p id="matchSuccess"> \匹配成功/ </p>
 </div>
 
-<script src="js/tips.js"> </script>
-<script src="js/match.js"> </script>
-<script src="js/websocket.js"> </script>
-<script src="js/sendMethod.js"> </script>
-<script src="js/game.js"> </script>
-<script src="js/AI.js"> </script>
-<script src="js/sound.js"> </script>
-<script src="js/chatRoom.js"> </script>
+<script src="js/utils.js"></script>
+<script src="js/websocket.js"></script>
+<script src="js/interface.js"></script>
+<script src="js/chatbar.js"></script>
+<script src="js/chessboard.js"></script>
+<script src="js/game.js"></script>
+<script src="js/AI.js"></script>
 </body>
 </html>

@@ -62,6 +62,7 @@ p.sysinfo {
     font-size: large;
 }
 
+
 .bgm {
     position: absolute;
     top: 30px;
@@ -199,6 +200,19 @@ p.sysinfo {
     background: url("../images/bg.jpg");
     background-size: cover;
     border: 5px goldenrod outset;
+}
+
+#regret{
+    position: absolute;
+    background: url(../images/button.jpg);
+    background-size: cover;
+    top: 300px;
+    left: 780px;
+    width: 60px;
+    height: 32px;
+    margin: 20px 0px;
+    border-radius: 4px;
+    font-size: large;
 }
 
 .r_clock {
