@@ -410,6 +410,6 @@ AI.getFreeDegree = function(x, y)
     }
     ret = tot / base;
     console.assert(tot / base <= 1, "error free degree!", [x, y], tot, base);
-    ret *= AI.getScore(x, y) * (AI.offend - AI.defend) / AI.offend / 4;
+    ret *= AI.getScore(x, y) * (AI.offend - AI.defend) / AI.offend / AI.offend;
     return ret;
 }

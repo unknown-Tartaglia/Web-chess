@@ -288,7 +288,7 @@ $id = 0;
 $room_id = 0;
 $online_num = 0;
 
-$log_user_list = false;
+$log_user_list = true;
 
 echo "启动成功\n";
 
@@ -305,13 +305,13 @@ while (true) {
     foreach ($clients as $client) {
         $read[] = $client['socket'];
         //echo "{{$client['socket']} : {$client['name']}}; ";
-        if($log_user_list) echo "{$client['name']} ";
+        if($log_user_list && isset($client['name'])) echo "{$client['name']} ";
     }
     if($log_user_list) echo "}\n";
     $log_user_list = false;
     unset($client);
 
-    //echo "\n";
+    //echo "\n"; 
 
     socket_select($read, $write, $except, null);
 
@@ -324,11 +324,10 @@ while (true) {
             $id++;
             $clients[] = [
                 'socket' => $new_client,
-                'name' => "usr$uni_name",
+                // 'name' => "usr$uni_name",
             ];
-            echo "new client {" . "$new_client : usr$uni_name} added\n";
+
             $online_num++;
-            $log_user_list = true;
 
             $data = socket_read($new_client, 1024);
             handshaking($new_client, $data);
@@ -534,6 +533,12 @@ while (true) {
                         }
                     }
                     unset($room);
+                }
+                else if($request_type === '30')
+                {
+                    $cur_client['name'] = $request_msg;
+                    echo "new client {" . "$new_client : $request_msg} added\n";
+                    $log_user_list = true;
                 }
             }
         }

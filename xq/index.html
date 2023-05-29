@@ -11,15 +11,15 @@
 <div class="console">
 	<button onmouseenter="xq.tipsAppear()" onmouseleave="xq.tipsDisappear()"> 提示</button>
 	<p id="change" style="visibility: hidden;background: white;"> 点击匹配可以与其他玩家对战，也可以选择与AI对战 </p>
-	<button onclick="xq.match()" name="match" id = "b0"> 匹配 </button>
+	<button class="clickable" onclick="xq.match()" name="match" id = "b0"> 匹配 </button>
 	<br>
-	<button onclick="xq.AI1()" name="AI1" id = "b1"> 普通 </button>
+	<button class="clickable" onclick="xq.AI1()" name="AI1" id = "b1"> 普通 </button>
 	<br>
-	<button onclick="xq.AI2()" name="AI2" id = "b2"> 高手 </button>
+	<button class="clickable" class="clickable" onclick="xq.AI2()" name="AI2" id = "b2"> 高手 </button>
 	<br>
-	<button onclick="xq.AI3()" name="AI3" id = "b3"> 大师 </button>
+	<button class="clickable" onclick="xq.AI3()" name="AI3" id = "b3"> 大师 </button>
 	<br>
-	<button onclick="xq.local()" name="local" id = "b4"> 本地 </button>
+	<button class="clickable" onclick="xq.local()" name="local" id = "b4"> 本地 </button>
 </div>
 
 <div class="game">
@@ -33,16 +33,17 @@
 
 <div class="bgm">
 	<label for="volume"> 音量 </label>
-	<input type="range" min="0" max="100" step="1" value="50" id="volume" oninput="xq.changeVolume()">
+	<input class="clickable" type="range" min="0" max="100" step="1" value="50" id="volume" oninput="xq.changeVolume()">
 	<label for="volume" id="volumeText"> 50 </label>
-	<button id="music" onclick="xq.toggleBgm()"> 开启BGM </button>
+	<button class="clickable" id="music" onclick="xq.toggleBgm()"> 开启BGM </button>
 </div>
 
 <div class="b_clock"> 
 	<p class="usr" id="b_usr"> r_usr </p>
 	<p class="time" id="b_time"> 90s </p>
 </div>
-<button onclick="xq.regret()" name="regret" id="regret"> 悔棋 </button>
+<button class="clickable" onclick="xq.regret()" name="regret" id="regret"> 悔棋 </button>
+<button class="clickable" onclick="xq.exit()" id="exit"> 退出 </button>
 <div class="r_clock"> 
 	<p class="usr" id="r_usr"> b_usr </p>
 	<p class="time" id="r_time"> 90s </p>
@@ -78,7 +79,7 @@
 <div class="matching" id="matching">
 	<p class="matchingPrompt" style="background: white;"> 正在为您匹配势均力敌的对手... </p>
 	<p class="matchingPrompt" id="timing"> </p>
-	<button onclick="xq.cancelMatch(true)" id="cancel"> 取消 </button>
+	<button class="clickable" onclick="xq.cancelMatch(true)" id="cancel"> 取消 </button>
 </div>
 
 <div class="matching" id="matchingSuccessBar">

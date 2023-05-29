@@ -110,6 +110,20 @@ ws.onmessage = function(event) {
 ws.onopen = function(event) {
     // WebSocket 连接建立成功，发送自己的ip
     console.log("WebSocket connection established");
+
+	function getCookieValue(cookieName)
+    {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++)
+        {
+            var cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '='))
+                return cookie.substring(cookieName.length + 1);
+        }
+        return null;
+    }
+
+	ws.send("30" + getCookieValue('username'));
 	xq.changeOnline(true);
     //ws.send(getIPAddress());
 };

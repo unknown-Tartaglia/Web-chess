@@ -2,6 +2,10 @@
     user-select: none;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 body {
     background: url(../images/background.jpg) scroll;
 }
@@ -207,7 +211,20 @@ p.sysinfo {
     background: url(../images/button.jpg);
     background-size: cover;
     top: 300px;
-    left: 780px;
+    left: 760px;
+    width: 60px;
+    height: 32px;
+    margin: 20px 0px;
+    border-radius: 4px;
+    font-size: large;
+}
+
+#exit{
+    position: absolute;
+    background: url(../images/button.jpg);
+    background-size: cover;
+    top: 300px;
+    left: 840px;
     width: 60px;
     height: 32px;
     margin: 20px 0px;

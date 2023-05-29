@@ -135,6 +135,11 @@ xq.local = function()
 }
 xq.regret = function()
 {
+    if(!game.isInGame())
+    {
+        alert("你只能在游戏中悔棋！");
+        return;
+    }
     if(game.isLocal())
     {
         game.steps.pop();
@@ -177,6 +182,17 @@ xq.regret = function()
     }
     else
         alert("联机模式暂不支持悔棋！");
+}
+
+xq.exit = function()
+{
+    if(game.isInGame())
+    {
+        var ret = confirm("正在游戏中，是否要退出？");
+        if(ret === false)
+            return;
+    }
+    location='../index.html';
 }
 
 
