@@ -1,0 +1,193 @@
+.clickable {
+    cursor: pointer;
+}
+
+#title {
+    /*margin: 0px;*/
+    position: absolute;
+    top: 0px;
+    right: 80px;
+    left: 0px;
+    height: 40px;
+    text-align: center;
+    /* background-color: blue; */
+}
+
+#login {
+    position: absolute;
+    right: 0px;
+}
+
+#avatarBlock {
+    position: absolute;
+    right: 0px;
+}
+
+#avatar{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    transform-style: preserve-3d;
+    transition: 1s ease;
+}
+
+#rankingBlock {
+    display: inline-block;
+    position: absolute;
+    top: 100px; 
+}
+
+.ranking {
+    display: inline-block;
+    width: 260px;
+    height: 500px;
+    margin: 0px 20px;
+    text-align: center;
+    /* background-color: red; */
+}
+
+#game {
+    display: inline-block;
+    position: absolute;
+    left: 940px;
+    top: 100px;
+    width: 260px;
+    height: 500px;
+    margin: 0px 20px;
+    /* background-color: green; */
+}
+
+.gameButton {
+    margin:40px 30px;
+    letter-spacing: 20px;
+    text-align: center;
+    font-size: 30px;
+    color: red;
+    text-shadow: 0 0 25px yellow, 0 0 5px orange;
+}
+
+#xqButton {
+    background: url(../images/xq.png);
+    background-size: cover;
+    background-position: center;
+}
+
+#wzqButton {
+    background: url(../images/wzq.png);
+    background-size: cover;
+    background-position: center;
+}
+
+#llqButton {
+    background: url(../images/llq.png);
+    background-size: cover;
+    background-position: center;
+}
+
+#video {
+    /* background-color: red; */
+    position: absolute;
+    top: 600px;
+}
+
+video {
+    width:200px;
+    height: 400px;
+    margin: 0px 20px;
+}
+
+.gameButton {
+    width: 200px;
+    height: 80px;
+}
+
+/*
+
+.user2 {
+    width: 100%;
+}
+
+.ri {
+    height: 675px;
+    background:
+        linear-gradient(90deg, #333 50%, transparent 0) repeat-x,
+        linear-gradient(90deg, #333 50%, transparent 0) repeat-x,
+        linear-gradient(0deg, #333 50%, transparent 0) repeat-y,
+        linear-gradient(0deg, #333 50%, transparent 0) repeat-y;
+    background-size: 8px 4px, 8px 4px, 4px 8px, 4px 8px;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    animation: linearGradientMove .3s infinite linear;
+}
+
+@keyframes linearGradientMove {
+    100% {
+        background-position: 4px 0, -4px 100%, 0 -4px, 100% 4px;
+    }
+}
+
+.user2 ul {
+    width: 100%;
+    line-height: 70px;
+    font-size: 27px;
+}
+
+.user2 ul li {
+    width: 90%;
+    height: 13%;
+    margin: auto;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.user2 ul li span:nth-child(2) {
+    padding-left: 40%;
+}
+
+.s {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80px;
+    padding-top: 18%;
+}
+
+.xi,
+.wuzi {
+    text-align: center;
+    line-height: 80px;
+    font-size: 40px;
+    background-size: cover;
+    width: 200px;
+    height: 80px;
+    color: white;
+}
+
+.xi {
+    background-image: url(../img/xi.png);
+}
+
+.wuzi {
+    background-image: url(../img/wu.png);
+}
+
+
+#video {
+    width: 200px;
+    height: 300px;
+}
+
+#video {
+    width: 1000px;
+    columns: 10 200px;
+    margin: auto;
+    margin: 100px 0px;
+    position: relative;
+    transform: translateX(-50%);
+    left: 50%;
+    top: 60px;
+    display: flex;
+    justify-content: space-between;
+}*/

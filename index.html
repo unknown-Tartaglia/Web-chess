@@ -6,9 +6,133 @@
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link rel="icon" href="images/icon.png">
 </head>
+
 <body>
-    <button onclick="document.location='xq/index.html'">象棋</button>
-    <button onclick="document.location='wzq/index.html'">五子棋</button>
-    <button onclick="document.location='llq/index.html'">连六棋</button>
+
+<div id="title">
+    <p style="font-size:40px;"> 棋逢对手 </p>
+</div>
+
+<div id="login">
+    <!-- <button onclick="document.location='login/login.html'"> 登录 </button>
+    <button onclick="document.location='login/register.html'"> 注册 </button>
+    <img src="images/avatar.jpg" id="avatar"> -->
+</div>
+
+<div id="rankingBlock">
+    <div class="ranking" id="xq">
+        <div id="rankingTitle">
+            <p>象棋积分榜</p>
+        </div>
+        <div class="rankinglist">
+            <ul>
+                <li><span>排名</span><span>用户名</span><span>积分</span></li>
+                <li><span>1</span><span>用户1</span><span>1800</span></li>
+                <li><span>2</span><span>用户1</span><span>1700</span></li>
+                <li><span>3</span><span>用户1</span><span>1600</span></li>
+                <li><span>4</span><span>用户1</span><span>1500</span></li>
+                <li><span>5</span><span>用户1</span><span>1400</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ranking" id="wzq">
+        <div id="rankingTitle">
+            <p>五子棋积分榜</p>
+        </div>
+        <div class="rankinglist">
+            <ul>
+                <li><span>排名</span><span>用户名</span><span>积分</span></li>
+                <li><span>1</span><span>用户1</span><span>1800</span></li>
+                <li><span>2</span><span>用户1</span><span>1700</span></li>
+                <li><span>3</span><span>用户1</span><span>1600</span></li>
+                <li><span>4</span><span>用户1</span><span>1500</span></li>
+                <li><span>5</span><span>用户1</span><span>1400</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ranking" id="llq">
+        <div id="rankingTitle">
+            <p>连六棋积分榜</p>
+        </div>
+        <div class="rankinglist">
+            <ul>
+                <li><span>排名</span><span>用户名</span><span>积分</span></li>
+                <li><span>1</span><span>用户1</span><span>1800</span></li>
+                <li><span>2</span><span>用户1</span><span>1700</span></li>
+                <li><span>3</span><span>用户1</span><span>1600</span></li>
+                <li><span>4</span><span>用户1</span><span>1500</span></li>
+                <li><span>5</span><span>用户1</span><span>1400</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="game">
+    <button class="gameButton clickable" id="xqButton" onclick="document.location='xq/index.html'">象棋</button>
+    <button class="gameButton clickable" id="wzqButton" onclick="document.location='wzq/index.html'">五子棋</button>
+    <button class="gameButton clickable"  id="llqButton" onclick="document.location='llq/index.html'">连六棋</button>
+</div>
+
+<div id="video">
+    <video controls src="./videos/video1.mp4"></video>
+    <video controls src="./videos/video2.mp4"></video>
+    <video controls src="./videos/video3.mp4"></video>
+    <video controls src="./videos/video4.mp4"></video>
+    <video controls src="./videos/video5.mp4"></video>
+</div>
+
 </body>
+
+<script>
+    var isLoggedIn = false;
+    var username = '';
+
+    var userAvatar = "images/avatar.jpg";
+
+    var userSection = document.getElementById("login");
+
+    var element;
+
+    function getCookieValue(cookieName)
+    {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++)
+        {
+            var cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '='))
+                return cookie.substring(cookieName.length + 1);
+        }
+        return null;
+    }
+
+    var cookie = getCookieValue('username');
+    if (cookie !== null) {
+        isLoggedIn = true;
+        username = cookie;
+    }
+
+    if (isLoggedIn) {
+      element = document.createElement("img");
+      element.src = userAvatar;
+      element.alt = "User Avatar";
+      element.id = "avatar";
+      element.className = "clickable";
+      element.onclick=()=>{document.location='user/profile.html'};
+      userSection.appendChild(element);
+    } else {
+      element = document.createElement("button");
+      element.className = "clickable";
+      element.onclick=()=>{document.location='login/login.html';};
+      element.textContent = "登录";
+      userSection.appendChild(element);
+      element = document.createElement("button");
+      element.className = "clickable";
+      element.onclick=()=>{document.location='login/register.html'};
+      element.textContent = "注册";
+      userSection.appendChild(element);
+    }
+</script>
+
 </html>

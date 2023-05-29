@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/1.css">
+</head>
+
+<body>
+    <div class="app">
+        <div class="dashBoard">
+            <nav>
+                <ul class="navigation">
+                  <li><a href="#">个人信息</a></li>
+                  <li><a onclick="document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'" href="../index.html">登出</a></li>
+                  <li><a href="../index.html">返回</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user_item">
+            <div class="user">
+                <div class="avatar">
+                    <img alt="" id="image">
+                </div>
+                <div class="Information">
+                    <div class="din">
+                        <p>用户名:<span>你猜</span></p>
+                        <p>积分:<span>你猜</span></p>
+                        <div class="p1">
+                            胜率:
+                            <div class="g-container">
+                                <div class="g-progress"></div>
+                            </div>
+                            <div class="g-container">
+                                <div class="g-progress"></div>
+                            </div>
+                        </div>
+                        <div class="o">
+                            <span>象棋</span>
+                            <span>五子棋</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="Integral_item">
+                <p class="p2"> 最近战绩:</p>
+                <div class="user1">
+                    <ul>
+                        <li>
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                        <li>
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                        <li>
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                        <li>
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                        <li>
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                        <li style="border:none;">
+                            <span>用户1</span>
+                            <span>vs</span>
+                            <span>用户2</span>
+                            <span>胜/败</span>
+                            <span>五/象</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function getCookieValue(cookieName)
+    {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++)
+        {
+            var cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '='))
+                return cookie.substring(cookieName.length + 1);
+        }
+        return null;
+    }
+
+    document.getElementById('image').src = "../images/" + getCookieValue('username') + ".jpg";
+</script>
+
+</html>

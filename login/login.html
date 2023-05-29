@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户登录</title>
+<link href=css/login.css rel="stylesheet"/>
+<script>
+	function changeCode()
+	{
+		document.getElementById("code").src="code.php";
+	}
+</script>
+
+</head>
+
+<body background="images/loginbg.png" style="background-size: 100% 100%;background-attachment: fixed;">
+<div class=box>
+	<div class=title>用户登录</div>
+	<form action="login.php" method="post">
+		<table class=login>
+			<tr><th>用户名：</th><td><input type="text" name="username"/></td></tr>
+			<tr><th>密码：</th><td><input type="password" name="password"/></td></tr>
+			<tr><th>验证码：</th><td><input type="text" name="captcha"/></td></tr>
+			<tr><th></th><td><img src="code.php" onclick="changeCode()" id="code"></td></tr>
+			<tr><th></th><td><input type="submit" value="登录"/><a href="register.html"><input type="button" value='前往注册'></a></td>
+			</tr>
+		
+		</table>
+	
+	</form>
+</div>
+</body>
+</html>
