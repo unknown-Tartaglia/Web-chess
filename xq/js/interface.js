@@ -142,14 +142,17 @@ xq.regret = function()
     }
     if(game.isLocal())
     {
-        game.steps.pop();
         if(AI.AIop)
         {
             if(!game.isInTurn())
+            {
                 alert("你只能在你的回合悔棋！");
+                return;
+            }
             else
                 game.steps.pop();
         }
+        game.steps.pop();
 
         cb.clear();
 
