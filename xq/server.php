@@ -9,6 +9,8 @@ echo $response;
 
 */
 
+require '../db/login_db_connect.php';
+
 
 // 握手
 function handshaking($newClient, $line){
@@ -284,7 +286,6 @@ $waiting_list = null;
 $room_list = [];
 
 // 客户端ID
-$id = 0;
 $room_id = 0;
 $online_num = 0;
 
@@ -298,20 +299,15 @@ while (true) {
     $write = null;
     $except = null;
 
-    //echo "monitor {0.0.0.0 : server}; ";
-
     // 从所有客户端和服务器读取数据
     if($log_user_list) echo "user list : { ";
     foreach ($clients as $client) {
         $read[] = $client['socket'];
-        //echo "{{$client['socket']} : {$client['name']}}; ";
         if($log_user_list && isset($client['name'])) echo "{$client['name']} ";
     }
     if($log_user_list) echo "}\n";
     $log_user_list = false;
     unset($client);
-
-    //echo "\n"; 
 
     socket_select($read, $write, $except, null);
 
@@ -320,11 +316,8 @@ while (true) {
         if ($socket === $server) {
             // 新客户端连接
             $new_client = socket_accept($server);
-            $uni_name = $id;
-            $id++;
             $clients[] = [
                 'socket' => $new_client,
-                // 'name' => "usr$uni_name",
             ];
 
             $online_num++;
@@ -335,10 +328,8 @@ while (true) {
         } else {
             // 客户端发送数据
             $bytes = socket_recv($socket, $data, 1024, MSG_DONTWAIT);
-            //echo "raw material $data($bytes)\n";
             assert($bytes);
             $data = decode($data);
-            //echo "processed data $data\n";
             if (isCloseFrame($data)) {
                 // 客户端断开连接
 
@@ -503,16 +494,31 @@ while (true) {
                             {
                                 echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
                                 echo "{$cur_client['name']} win!\n";
+
+                                $winner = "";
+                                $loser = "";
+
                                 if($cur_client === $room['player1'])
                                 {
                                     socket_write($room['player1']['socket'], frame("21" . '1'));
                                     socket_write($room['player2']['socket'], frame("21" . '0'));
+                                    $winner = $room['player1']['name'];
+                                    $loser = $room['player2']['name'];
                                 }
                                 else
                                 {
                                     socket_write($room['player1']['socket'], frame("21" . '0'));
                                     socket_write($room['player2']['socket'], frame("21" . '1'));
+                                    $winner = $room['player2']['name'];
+                                    $loser = $room['player1']['name'];
                                 }
+                                //存战绩
+                                $sql = "insert into record (user1, user2, type) values ('$winner', '$loser', '象棋')";
+                                $con->query($sql);
+                                $sql = "update xqRanking set score=score+20, wins=wins+1 where username='$winner'";
+                                $con->query($sql);
+                                $sql = "update xqRanking set score=score-20, loses=loses+1 where username='$loser'";
+                                $con->query($sql);
                                 echo "disband room{$room['room_id']}: {{$room['player1']['name']}, {$room['player2']['name']}}\n";
                                 unset($room_list[$r_key]);
                                 continue;

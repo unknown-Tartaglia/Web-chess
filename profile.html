@@ -294,49 +294,45 @@ background-color: #ddd;
             <div class="Integral_item">
                 <p class="p2"> 最近战绩:</p>
                 <div class="user1">
-                    <ul>
-                        <li>
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
-                        <li>
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
-                        <li>
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
-                        <li>
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
-                        <li>
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
-                        <li style="border:none;">
-                            <span>用户1</span>
-                            <span>vs</span>
-                            <span>用户2</span>
-                            <span>胜/败</span>
-                            <span>五/象</span>
-                        </li>
+                    <ul class="list">
+                        <script>
+                            $(document).ready(function() {
+                                $.ajax({
+                                    url: 'db/record.php',
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        if (response.success) {
+                                            var rankingData = response.data;
+
+                                            for (var i = 0; i < rankingData.length; i++) {
+                                                var listItem = $('<li>');
+                                                if(i === rankingData.length - 1)
+                                                {
+                                                    listItem.css('border', "none");
+                                                }
+                                                var spanItem = $('<span>').text(rankingData[i][0]);
+                                                listItem.append(spanItem);
+                                                spanItem = $('<span>').text("vs");
+                                                listItem.append(spanItem);
+                                                spanItem = $('<span>').text(rankingData[i][1]);
+                                                listItem.append(spanItem);
+                                                spanItem = $('<span>').text(rankingData[i][2]);
+                                                listItem.append(spanItem);
+                                                spanItem = $('<span>').text(rankingData[i][3]);
+                                                listItem.append(spanItem);
+                                                $('.list').append(listItem);
+                                            }
+                                        } else {
+                                            console.error('Failed to retrieve ranking data.');
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error('Error:', error);
+                                    }
+                                });
+                            });
+                            </script>
                     </ul>
                 </div>
             </div>
