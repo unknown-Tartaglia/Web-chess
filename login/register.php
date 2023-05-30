@@ -1,7 +1,7 @@
 <?php
 header('content-type:text/html;charset=utf-8');
 //注册页面
-require 'db/login_db_connect.php';//连接数据库
+require '../db/login_db_connect.php';//连接数据库
 
 //判断表单是否提交,用户名密码是否提交
 if (isset($_POST['username'])&&isset($_POST['pwd'])&&isset($_POST['pwd1'])){//登录表单已提交
@@ -21,6 +21,13 @@ if (isset($_POST['username'])&&isset($_POST['pwd'])&&isset($_POST['pwd1'])){//�
         $row=mysqli_num_rows($result);//返回记录数
         if(!$row){//记录数不存在则说明该账户没有被注册过
             if (mysqli_query($con,$sql)){//查询insert语句是否成功执行，成功将返回 TRUE。如果失败，则返回 FALSE。
+                //初始化所有数据表
+                $sql="insert into xqRanking(username,score, wins, loses) values ('$user', 0, 0, 0);";
+                mysqli_query($con, $sql);
+                $sql="insert into wzqRanking(username,score, wins, loses) values ('$user', 0, 0, 0);";
+                mysqli_query($con, $sql);
+                $sql="insert into llqRanking(username,score, wins, loses) values ('$user', 0, 0, 0);";
+                mysqli_query($con, $sql);
                 //跳转登录页面
                 echo "<script>alert('注册成功，请登录');location='./login.html'</script>";
             }else{//失败则重新跳转注册页面

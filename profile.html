@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -111,7 +112,7 @@ background-color: #ddd;
 }
 
 .g-container {
-    width: 40%;
+    width: 25%;
     height: 10px;
     border-radius: 25px;
     background: #eee;
@@ -197,21 +198,95 @@ background-color: #ddd;
                 </div>
                 <div class="Information">
                     <div class="din">
-                        <p>用户名:<span>你猜</span></p>
-                        <p>积分:<span>你猜</span></p>
-                        <div class="p1">
-                            胜率:
-                            <div class="g-container">
-                                <div class="g-progress"></div>
-                            </div>
-                            <div class="g-container">
-                                <div class="g-progress"></div>
-                            </div>
-                        </div>
-                        <div class="o">
-                            <span>象棋</span>
-                            <span>五子棋</span>
-                        </div>
+                        <script>
+                        $(document).ready(function() {
+                            $.ajax({
+                                url: 'db/profile.php',
+                                method: 'GET',
+                                dataType: 'json',
+                                success: function(response) {
+                                    if (response.success) {
+                                        //用户名，象棋，赢，输，五子棋，赢，输，连六棋，赢，输
+
+                                        response.data[3] = parseInt(response.data[2]) + parseInt(response.data[3]);
+                                        if(response.data[3] === 0) response.data[3] = 1;
+                                        response.data[6] = parseInt(response.data[5]) + parseInt(response.data[6]);
+                                        if(response.data[6] === 0) response.data[6] = 1;
+                                        response.data[9] = parseInt(response.data[8]) + parseInt(response.data[9]);
+                                        if(response.data[9] === 0) response.data[9] = 1;
+                                        let xqRate = (response.data[2] / response.data[3] * 100).toString() + '%';
+                                        let wzqRate = (response.data[5] / response.data[6] * 100).toString() + '%';
+                                        let llqRate = (response.data[8] / response.data[9] * 100).toString() + '%';
+
+                                        var pItem = $('<p>').text('用  户  名：');
+                                        var spanItem = $('<span>').text(response.data[0]);
+                                        pItem.append(spanItem);
+                                        $('.din').append(pItem);
+
+                                        pItem = $('<p>').text('象  棋积分：');
+                                        spanItem = $('<span>').text(response.data[1]);
+                                        pItem.append(spanItem);
+                                        $('.din').append(pItem);
+
+                                        pItem = $('<p>').text('五子棋积分：');
+                                        spanItem = $('<span>').text(response.data[4]);
+                                        pItem.append(spanItem);
+                                        $('.din').append(pItem);
+
+                                        pItem = $('<p>').text('连六棋积分：');
+                                        spanItem = $('<span>').text(response.data[7]);
+                                        pItem.append(spanItem);
+                                        $('.din').append(pItem);
+                                        
+                                        var divItem = $('<div>').text('胜率：');
+                                        divItem.addClass('p1');
+
+                                        var divItem1 = $('<div>').text('');
+                                        divItem1.addClass('g-container');
+                                        var divItem2 = $('<div>').text('');
+                                        divItem2.addClass('g-progress');
+                                        divItem2.css('width', xqRate);
+                                        divItem1.append(divItem2);
+                                        divItem.append(divItem1);
+
+                                        divItem1 = $('<div>').text('');
+                                        divItem1.addClass('g-container');
+                                        divItem2 = $('<div>').text('');
+                                        divItem2.addClass('g-progress');
+                                        divItem2.css('width', wzqRate);
+                                        divItem1.append(divItem2);
+                                        divItem.append(divItem1);
+
+                                        divItem1 = $('<div>').text('');
+                                        divItem1.addClass('g-container');
+                                        divItem2 = $('<div>').text('');
+                                        divItem2.addClass('g-progress');
+                                        divItem2.css('width', llqRate);
+                                        divItem1.append(divItem2);
+                                        divItem.append(divItem1);
+
+                                        $('.din').append(divItem);
+
+                                        divItem = $('<div>').text('');
+                                        divItem.addClass('o');
+                                        spanItem = $('<span>').text('象棋');
+                                        divItem.append(spanItem);
+                                        spanItem = $('<span>').text('五子棋');
+                                        divItem.append(spanItem);
+                                        spanItem = $('<span>').text('连六棋');
+                                        divItem.append(spanItem);
+                                        $('.din').append(divItem);
+                                        
+                                    } else {
+                                        console.error('Failed to retrieve ranking data.');
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error:', error);
+                                }
+                            });
+                        });
+                        </script>
                     </div>
                 </div>
             </div>
@@ -283,6 +358,7 @@ background-color: #ddd;
     }
 
     document.getElementById('image').src = "../images/" + getCookieValue('username') + ".jpg";
+    document.getElementById('image').src = "../images/avatar.jpg";
 </script>
 
 </html>

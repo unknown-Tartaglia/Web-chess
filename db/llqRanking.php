@@ -9,6 +9,7 @@ if ($result->num_rows > 0) {
     $rankingData = array();
     while ($row = $result->fetch_assoc()) {
         // 将每行数据添加到排名数据数组中
+        $data = [];
         $data[] = $row['username'];
         $data[] = $row['score'];
         $rankingData[] =  $data;
