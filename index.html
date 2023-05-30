@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link rel="icon" href="images/icon.png">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -14,9 +15,7 @@
 </div>
 
 <div id="login">
-    <!-- <button onclick="document.location='login/login.html'"> 登录 </button>
-    <button onclick="document.location='login/register.html'"> 注册 </button>
-    <img src="images/avatar.jpg" id="avatar"> -->
+
 </div>
 
 <div id="rankingBlock">
@@ -25,13 +24,38 @@
             <p>象棋积分榜</p>
         </div>
         <div class="rankinglist">
-            <ul>
+            <ul id="xqRankinglist">
                 <li><span>排名</span><span>用户名</span><span>积分</span></li>
-                <li><span>1</span><span>用户1</span><span>1800</span></li>
-                <li><span>2</span><span>用户1</span><span>1700</span></li>
-                <li><span>3</span><span>用户1</span><span>1600</span></li>
-                <li><span>4</span><span>用户1</span><span>1500</span></li>
-                <li><span>5</span><span>用户1</span><span>1400</span></li>
+                <script>
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'db/xqRanking.php',
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    var rankingData = response.data;
+
+                                    for (var i = 0; i < rankingData.length; i++) {
+                                        var listItem = $('<li>');
+                                        var spanItem = $('<span>').text(i + 1);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][0]);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][1]);
+                                        listItem.append(spanItem);
+                                        $('#xqRankinglist').append(listItem);
+                                    }
+                                } else {
+                                    console.error('Failed to retrieve ranking data.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                </script>
             </ul>
         </div>
     </div>
@@ -41,13 +65,38 @@
             <p>五子棋积分榜</p>
         </div>
         <div class="rankinglist">
-            <ul>
+            <ul id="wzqRankinglist">
                 <li><span>排名</span><span>用户名</span><span>积分</span></li>
-                <li><span>1</span><span>用户1</span><span>1800</span></li>
-                <li><span>2</span><span>用户1</span><span>1700</span></li>
-                <li><span>3</span><span>用户1</span><span>1600</span></li>
-                <li><span>4</span><span>用户1</span><span>1500</span></li>
-                <li><span>5</span><span>用户1</span><span>1400</span></li>
+                <script>
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'db/wzqRanking.php',
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    var rankingData = response.data;
+
+                                    for (var i = 0; i < rankingData.length; i++) {
+                                        var listItem = $('<li>');
+                                        var spanItem = $('<span>').text(i + 1);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][0]);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][1]);
+                                        listItem.append(spanItem);
+                                        $('#wzqRankinglist').append(listItem);
+                                    }
+                                } else {
+                                    console.error('Failed to retrieve ranking data.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                </script>
             </ul>
         </div>
     </div>
@@ -57,13 +106,38 @@
             <p>连六棋积分榜</p>
         </div>
         <div class="rankinglist">
-            <ul>
+            <ul id="llqRankinglist">
                 <li><span>排名</span><span>用户名</span><span>积分</span></li>
-                <li><span>1</span><span>用户1</span><span>1800</span></li>
-                <li><span>2</span><span>用户1</span><span>1700</span></li>
-                <li><span>3</span><span>用户1</span><span>1600</span></li>
-                <li><span>4</span><span>用户1</span><span>1500</span></li>
-                <li><span>5</span><span>用户1</span><span>1400</span></li>
+                <script>
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'db/llqRanking.php',
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    var rankingData = response.data;
+
+                                    for (var i = 0; i < rankingData.length; i++) {
+                                        var listItem = $('<li>');
+                                        var spanItem = $('<span>').text(i + 1);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][0]);
+                                        listItem.append(spanItem);
+                                        spanItem = $('<span>').text(rankingData[i][1]);
+                                        listItem.append(spanItem);
+                                        $('#llqRankinglist').append(listItem);
+                                    }
+                                } else {
+                                    console.error('Failed to retrieve ranking data.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                </script>
             </ul>
         </div>
     </div>

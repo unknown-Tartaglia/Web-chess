@@ -1,7 +1,7 @@
 <?php
 header('content-type:text/html;charset=utf-8');
 //注册页面
-require 'login_db_connect.php';//连接数据库
+require 'db/login_db_connect.php';//连接数据库
 
 //判断表单是否提交,用户名密码是否提交
 if (isset($_POST['username'])&&isset($_POST['pwd'])&&isset($_POST['pwd1'])){//登录表单已提交
