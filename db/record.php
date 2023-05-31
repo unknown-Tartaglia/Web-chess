@@ -3,7 +3,7 @@ require 'login_db_connect.php';
 
 $name = $_COOKIE['username'];
 
-$sql = "SELECT user1, user2, type FROM record where user1='$name' or user2='$name' limit 6";
+$sql = "SELECT user1, user2, type FROM record where user1='$name' or user2='$name' order by id desc limit 6";
 $result = $con->query($sql);
 
 if ($result->num_rows > 0) {

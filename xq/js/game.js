@@ -114,7 +114,12 @@ game.setTurn = function(turn)
 
 game.exchangeTurn = function()
 {
+    if(game.isInTurn())
+            document.getElementById('r_time').textContent = 90 + 's';
+    else
+        document.getElementById('b_time').textContent = 90 + 's';
     game.isMyTurn = !game.isMyTurn;
+    xq.countTime(90, game.isInTurn());
     if(game.checkMate())
         xq.playSound('alert');
 
@@ -129,6 +134,7 @@ game.start = function()
     game.initChessBoard();
     cb.load();
     chatbar.writeSystem("游戏开始");
+    xq.countTime(90, game.isInTurn());
     if(game.isInTurn() && game.isInAIMode())
         AI.AIAct('r');
 }

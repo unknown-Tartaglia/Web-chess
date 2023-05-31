@@ -9,7 +9,7 @@ echo $response;
 
 */
 
-require '../db/login_db_connect.php';
+require '/var/www/html/db/login_db_connect.php';
 
 
 // 握手
@@ -261,6 +261,51 @@ function send_move_msg($x, $y, $row, $col, $room)
     socket_write($room['player2']['socket'], frame("20$op_x$op_y$op_row$op_col"));
 }
 
+//胜利
+function game_over(&$cur_client, &$room, &$room_list, &$r_key, $giveup)
+{
+    global $con;
+    echo "{$cur_client['name']} win!\n";
+    $winner = "";
+    $loser = "";
+
+    if($cur_client === $room['player1'])
+    {
+        if($giveup)
+            socket_write($room['player1']['socket'], frame("21" . '11'));
+        else
+            socket_write($room['player1']['socket'], frame("21" . '1'));
+
+        socket_write($room['player2']['socket'], frame("21" . '0'));
+        $winner = $room['player1']['name'];
+        $loser = $room['player2']['name'];
+    }
+    else
+    {
+        if($giveup)
+        {
+            socket_write($room['player1']['socket'], frame("21" . '01'));
+            socket_write($room['player2']['socket'], frame("21" . '11'));
+        }
+        else
+        {
+            socket_write($room['player1']['socket'], frame("21" . '0'));
+            socket_write($room['player2']['socket'], frame("21" . '1'));
+        }
+        $winner = $room['player2']['name'];
+        $loser = $room['player1']['name'];
+    }
+    //存战绩
+    $sql = "insert into record (user1, user2, type) values ('$winner', '$loser', '象棋')";
+    $con->query($sql);
+    $sql = "update xqRanking set score=score+20, wins=wins+1 where username='$winner'";
+    $con->query($sql);
+    $sql = "update xqRanking set score=score-20, loses=loses+1 where username='$loser'";
+    $con->query($sql);
+    echo "disband room{$room['room_id']}: {{$room['player1']['name']}, {$room['player2']['name']}}\n";
+    unset($room_list[$r_key]);
+}
+
 // 创建WebSocket服务器
 $server = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($server, SOL_SOCKET, SO_REUSEADDR, 1);
@@ -444,8 +489,8 @@ while (true) {
                         echo "{$waiting_list['name']} VS {$cur_client['name']} in room $room_id\n";
                         $room_id++;
                         
-                        socket_write($waiting_list['socket'], frame("10" . '0'));
-                        socket_write($cur_client['socket'], frame("10" . '1'));
+                        socket_write($waiting_list['socket'], frame("10" . '0' . $cur_client['name']));
+                        socket_write($cur_client['socket'], frame("10" . '1' . $waiting_list['name']));
                         $waiting_list = null;
                     }
                 }
@@ -493,34 +538,7 @@ while (true) {
                             if($room['chess_board'][$row][$col] === "r_j" || $room['chess_board'][$row][$col] === "b_j" )
                             {
                                 echo "{$cur_client['name']} move {$room['chess_board'][$row][$col]} from ($x,$y) to ($row,$col)\n";
-                                echo "{$cur_client['name']} win!\n";
-
-                                $winner = "";
-                                $loser = "";
-
-                                if($cur_client === $room['player1'])
-                                {
-                                    socket_write($room['player1']['socket'], frame("21" . '1'));
-                                    socket_write($room['player2']['socket'], frame("21" . '0'));
-                                    $winner = $room['player1']['name'];
-                                    $loser = $room['player2']['name'];
-                                }
-                                else
-                                {
-                                    socket_write($room['player1']['socket'], frame("21" . '0'));
-                                    socket_write($room['player2']['socket'], frame("21" . '1'));
-                                    $winner = $room['player2']['name'];
-                                    $loser = $room['player1']['name'];
-                                }
-                                //存战绩
-                                $sql = "insert into record (user1, user2, type) values ('$winner', '$loser', '象棋')";
-                                $con->query($sql);
-                                $sql = "update xqRanking set score=score+20, wins=wins+1 where username='$winner'";
-                                $con->query($sql);
-                                $sql = "update xqRanking set score=score-20, loses=loses+1 where username='$loser'";
-                                $con->query($sql);
-                                echo "disband room{$room['room_id']}: {{$room['player1']['name']}, {$room['player2']['name']}}\n";
-                                unset($room_list[$r_key]);
+                                game_over($cur_client, $room, $room_list, $r_key, false);
                                 continue;
                             }
 
@@ -545,6 +563,18 @@ while (true) {
                     $cur_client['name'] = $request_msg;
                     echo "new client {" . "$new_client : $request_msg} added\n";
                     $log_user_list = true;
+                }
+                else if($request_type === '40')
+                {
+                    foreach($room_list as $r_key => &$room)
+                    if($cur_client === $room['player1'] || $cur_client === $room['player2'])
+                    {
+                        if($cur_client === $room['player1'])
+                            game_over($room['player2'], $room, $room_list, $r_key, true);
+                        else
+                            game_over($room['player1'], $room, $room_list, $r_key, true);
+                    }
+                    
                 }
             }
         }

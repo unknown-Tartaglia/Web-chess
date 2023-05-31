@@ -232,6 +232,19 @@ p.sysinfo {
     font-size: large;
 }
 
+#surrender{
+    position: absolute;
+    background: url(../images/button.jpg);
+    background-size: cover;
+    top: 340px;
+    left: 800px;
+    width: 60px;
+    height: 32px;
+    margin: 20px 0px;
+    border-radius: 4px;
+    font-size: large;
+}
+
 .r_clock {
     position: absolute;
     top: 418px;

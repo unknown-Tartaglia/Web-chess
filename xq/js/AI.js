@@ -8,7 +8,7 @@ AI.his = [];
 AI.setDepth = 4;
 AI.setSpeed = 1000;
 AI.offend = 10;//先手系数
-AI.defend = 6;//后手系数
+AI.defend = 7;//后手系数
 
 
 AI.AI = function(level)
@@ -18,6 +18,7 @@ AI.AI = function(level)
         alert("你已经在游戏中！")
         return;
     }
+    AI.setDepth = level + 1;
     game.setTurn(true);
     game.setLocal(true);
     AI.setAIop(true);
@@ -270,7 +271,7 @@ AI.evalScore = function(color, needLog)
                 //吃子
                 if(game.chessBoard[x][y][0] !== game.chessBoard[i][j][0])
                 {
-                    //不考虑将军
+                    //将军另外考虑
                     if(game.chessBoard[x][y][2] === 'j') continue;
                     AI.chessInDanger[x][y] = true;
                     if(game.chessBoard[i][j][0] === color)
@@ -378,10 +379,10 @@ AI.getScore = function(x, y)
         else if(dest === 'z')
         {
             if(game.chessBoard[x][y][0] === 'r' && x <= 4)
-                return 2;
+                return 2 - (Math.abs(4 - y)) / 10;
             if(game.chessBoard[x][y][0] === 'b' && x >= 5)
-                return 2;
-            return 1;
+                return 2 - (Math.abs(4 - y)) / 10;
+            return 1 - (Math.abs(4 - y)) / 10;
         }
         else if(dest === 'j') return 1000;
         else
@@ -411,5 +412,7 @@ AI.getFreeDegree = function(x, y)
     ret = tot / base;
     console.assert(tot / base <= 1, "error free degree!", [x, y], tot, base);
     ret *= AI.getScore(x, y) * (AI.offend - AI.defend) / AI.offend / AI.offend;
+    //console.log(ret);
+    ret += (4 - Math.abs(x - 4)) / 40;
     return ret;
 }

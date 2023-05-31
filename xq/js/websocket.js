@@ -72,10 +72,11 @@ ws.onmessage = function(event) {
 	else if(type === '10')
 	{
 		xq.cancelMatch(false);
-		if(msg === '0')
+		if(msg[0] === '0')
 			game.setTurn(true);
 		else
 			game.setTurn(false);
+		document.getElementById('b_usr').textContent = msg.slice(1);
 		xq.matchSuccess();
 		//进入房间
 		/*initRoom();
@@ -98,9 +99,14 @@ ws.onmessage = function(event) {
 	//游戏结束
 	else if(type === '21')
 	{
-		if(msg === '1')
-			alert("你赢了！");
-		else if(msg === '0')
+		if(msg[0] === '1')
+		{
+			if(msg.length === 1)
+				alert("你赢了！");
+			else
+				alert("对方投降，你赢了！");
+		}
+		else if(msg[0] === '0')
 			alert("你输了！")
 		game.stop();
 	}

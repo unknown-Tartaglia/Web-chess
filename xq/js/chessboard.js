@@ -148,7 +148,7 @@ cb.clickEvent = function(e)
     //console.log(row, col, e.layerX, e.layerY);
     if(distance(e.layerX, e.layerY, row, col) < 24)
     {
-        console.log("点击" + game.chessBoard[row][col]);
+        //console.log("点击" + game.chessBoard[row][col]);
         //选子
         if(cb.chosen === null)
         {

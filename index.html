@@ -21,7 +21,7 @@
 <div id="rankingBlock">
     <div class="ranking" id="xq">
         <div id="rankingTitle">
-            <p>象棋积分榜</p>
+            <p style="font-size: 30px;text-align:right;">象棋积分榜</p>
         </div>
         <div class="rankinglist">
             <ul id="xqRankinglist">
@@ -62,7 +62,7 @@
 
     <div class="ranking" id="wzq">
         <div id="rankingTitle">
-            <p>五子棋积分榜</p>
+            <p style="font-size: 30px;text-align:right;">五子棋积分榜</p>
         </div>
         <div class="rankinglist">
             <ul id="wzqRankinglist">
@@ -103,7 +103,7 @@
 
     <div class="ranking" id="llq">
         <div id="rankingTitle">
-            <p>连六棋积分榜</p>
+            <p style="font-size: 30px;text-align:right;">连六棋积分榜</p>
         </div>
         <div class="rankinglist">
             <ul id="llqRankinglist">
@@ -144,9 +144,9 @@
 </div>
 
 <div id="game">
-    <button class="gameButton clickable" id="xqButton" onclick="document.location='xq/index.html'">象棋</button>
-    <button class="gameButton clickable" id="wzqButton" onclick="document.location='wzq/index.html'">五子棋</button>
-    <button class="gameButton clickable"  id="llqButton" onclick="document.location='llq/index.html'">连六棋</button>
+    <button class="gameButton clickable" id="xqButton" onclick="xqEnter()">象棋</button>
+    <button class="gameButton clickable" id="wzqButton" onclick="wzqEnter()">五子棋</button>
+    <button class="gameButton clickable"  id="llqButton" onclick="llqEnter()">连六棋</button>
 </div>
 
 <div id="video">
@@ -154,7 +154,6 @@
     <video controls src="./videos/video2.mp4"></video>
     <video controls src="./videos/video3.mp4"></video>
     <video controls src="./videos/video4.mp4"></video>
-    <video controls src="./videos/video5.mp4"></video>
 </div>
 
 </body>
@@ -168,6 +167,36 @@
     var userSection = document.getElementById("login");
 
     var element;
+
+    function xqEnter()
+    {
+        if(getCookieValue('username') === null)
+        {
+            alert("请先登录");
+            return;
+        }
+        document.location='xq/index.html';
+    }
+
+    function wzqEnter()
+    {
+        if(getCookieValue('username') === null)
+        {
+            alert("请先登录");
+            return;
+        }
+        document.location='wzq/index.html';
+    }
+
+    function llqEnter()
+    {
+        if(getCookieValue('username') === null)
+        {
+            alert("请先登录");
+            return;
+        }
+        document.location='llq/index.html';
+    }
 
     function getCookieValue(cookieName)
     {

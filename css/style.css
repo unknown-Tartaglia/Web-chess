@@ -2,6 +2,11 @@
     cursor: pointer;
 }
 
+body {
+    background: url(../images/index_bg.png) scroll;
+    background-size: 150%;
+}
+
 #title {
     /*margin: 0px;*/
     position: absolute;
@@ -100,6 +105,20 @@ video {
 .gameButton {
     width: 200px;
     height: 80px;
+}
+
+ul {
+    width: 100%;
+    line-height: 40px;
+    font-size: 20px;
+}
+
+ul li {
+    width: 100%;
+    height: 1%;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 /*

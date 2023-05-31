@@ -198,10 +198,40 @@ xq.exit = function()
     location='../index.html';
 }
 
+xq.surrender = function()
+{
+    if(game.isInGame())
+    {
+        var ret = confirm("你确定要投降吗？");
+        if(ret === true)
+            ws.send("40");
+    }
+}
+
+xq.countTime = function(time, isMyCount)
+{
+    if(isMyCount !== game.isInTurn() || !game.isInGame())
+        return;
+    if(time > 0)
+    {
+        if(game.isInTurn())
+            document.getElementById('r_time').textContent = time + 's';
+        else
+            document.getElementById('b_time').textContent = time + 's';
+        time--;
+        setTimeout("xq.countTime(" + time + ", " + isMyCount + ")", 1000);
+    }
+    else
+    {
+        //TODO:超时
+        ws.send("40");
+    }
+}
+
 
 xq.playSound = function(str)
 {
-    console.log("play " + str);
+    //console.log("play " + str);
     if(str === 'alert')
         xq.alertSound.play();
     else if(str === 'eat')
