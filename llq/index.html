@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>中国象棋</title>
+<title>连六棋</title>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link rel="icon" href="images/icon.png">
@@ -9,44 +9,42 @@
 <body>
 
 <div class="console">
-	<button onmouseenter="xq.tipsAppear()" onmouseleave="xq.tipsDisappear()"> 提示</button>
+	<button onmouseenter="llq.tipsAppear()" onmouseleave="llq.tipsDisappear()"> 提示</button>
 	<p id="change" style="visibility: hidden;background: white;"> 点击匹配可以与其他玩家对战，也可以选择与AI对战 </p>
-	<button class="clickable" onclick="xq.match()" name="match" id = "b0"> 匹配 </button>
+	<button class="clickable" onclick="llq.match()" name="match" id = "b0"> 匹配 </button>
 	<br>
-	<button class="clickable" onclick="xq.AI1()" name="AI1" id = "b1"> 普通 </button>
+	<button class="clickable" onclick="llq.AI1()" name="AI1" id = "b1"> 普通 </button>
 	<br>
-	<button class="clickable" class="clickable" onclick="xq.AI2()" name="AI2" id = "b2"> 高手 </button>
+	<button class="clickable" class="clickable" onclick="llq.AI2()" name="AI2" id = "b2"> 高手 </button>
 	<br>
-	<button class="clickable" onclick="xq.AI3()" name="AI3" id = "b3"> 大师 </button>
+	<button class="clickable" onclick="llq.AI3()" name="AI3" id = "b3"> 大师 </button>
 	<br>
-	<button class="clickable" onclick="xq.local()" name="local" id = "b4"> 本地 </button>
+	<button class="clickable" onclick="llq.local()" name="local" id = "b4"> 本地 </button>
 </div>
 
 <div class="game">
-	<h1> 中国象棋 </h1>
+	<h1> 连六棋 </h1>
 	<div class="chessboard">
-		<canvas class="board" id="board">
-		</canvas>
+		<canvas id="board" width="620" height="570"></canvas>
 	</div>
+	<div class="bn_box" id="bnBox"> <a id="regretBtn">悔   棋(3)</a> <a id="restartBtn">退   出</a> </div>
 	<p id="onlineNum"></p>
 </div>
 
 <div class="bgm">
 	<label for="volume"> 音量 </label>
-	<input class="clickable" type="range" min="0" max="100" step="1" value="50" id="volume" oninput="xq.changeVolume()">
+	<input class="clickable" type="range" min="0" max="100" step="1" value="50" id="volume" oninput="llq.changeVolume()">
 	<label for="volume" id="volumeText"> 50 </label>
-	<button class="clickable" id="music" onclick="xq.toggleBgm()"> 开启BGM </button>
+	<button class="clickable" id="music" onclick="llq.toggleBgm()"> 开启BGM </button>
 </div>
 
 <div class="b_clock"> 
-	<p class="usr" id="b_usr"> b_usr </p>
+	<p class="usr" id="b_usr"> r_usr </p>
 	<p class="time" id="b_time"> 90s </p>
 </div>
-<button class="clickable" onclick="xq.regret()" name="regret" id="regret"> 悔棋 </button>
-<button class="clickable" onclick="xq.exit()" id="exit"> 退出 </button>
-<button class="clickable" onclick="xq.surrender()" id="surrender"> 投降 </button>
+<button class="clickable" onclick="llq.exit()" id="exit"> 退出 </button>
 <div class="r_clock"> 
-	<p class="usr" id="r_usr"> r_usr </p>
+	<p class="usr" id="r_usr"> b_usr </p>
 	<p class="time" id="r_time"> 90s </p>
 </div>
 
@@ -65,36 +63,40 @@
 		<h2 class="chatbartitle"> 系统频道 </h2>
 	</div>
 	<div class="switch">
-		<div onclick="xq.clickSystem()" id="system"> 系统 </div>
-		<div onclick="xq.clickRoom()" id="room"> 房间 </div>
-		<div onclick="xq.clickWorld()" id="world"> 世界 </div>
+		<div onclick="llq.clickSystem()" id="system"> 系统 </div>
+		<div onclick="llq.clickRoom()" id="room"> 房间 </div>
+		<div onclick="llq.clickWorld()" id="world"> 世界 </div>
 	</div>
 	<form id="form">
 		<textarea cols="40" rows="6" placeholder="和对手说两句吧" name="text" id="text"></textarea>
 		<br>
 		<!--<input type="button" value="发送" onclick="loadXMLDoc(document.getElementById('text').value)">-->
-		<input type="button" value="发送" onclick="xq.sendMessage()">
+		<input type="button" value="发送" onclick="llq.sendMessage()">
 	</form>
 </div> 
 
 <div class="matching" id="matching">
 	<p class="matchingPrompt" style="background: white;"> 正在为您匹配势均力敌的对手... </p>
 	<p class="matchingPrompt" id="timing"> </p>
-	<button class="clickable" onclick="xq.cancelMatch(true)" id="cancel"> 取消 </button>
+	<button class="clickable" onclick="llq.cancelMatch(true)" id="cancel"> 取消 </button>
 </div>
 
 <div class="matching" id="matchingSuccessBar">
 	<p id="matchSuccess"> \匹配成功/ </p>
 </div>
 
-<script src="js/utils.js"></script>
+<script src="js/com.js"></script>
 <script src="js/websocket.js"></script>
 <script src="js/interface.js"></script>
 <script src="js/chatbar.js"></script>
-<script src="js/chessboard.js"></script>
-<script src="js/game.js"></script>
 <script src="js/AI.js"></script>
+<script src="js/com_online.js"></script>
+<script src="js/play.js"></script>
+<script src="js/play_online.js"></script>
 </body>
+
+
+
 
 <script>
 	function getCookieValue(cookieName)

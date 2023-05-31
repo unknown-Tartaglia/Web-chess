@@ -1,0 +1,17 @@
+server code(towards server {server.php}):
+    00: broadcast request
+    01：secret chat request
+    02: cheat mode
+    10: cancel match
+    11: match
+    20: click event
+
+client code(towards client {onMessage}):
+    00: update online number
+    01: update world channel chatbar
+    02: update room channel chatbar
+    03: update system channel chatbar
+    10: match success
+    11: game stops unexpected
+    20: chess move
+    21: game over

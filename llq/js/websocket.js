@@ -37,8 +37,8 @@
 
 */
 
-const ws = new WebSocket('ws://192.168.43.221:12345');
-//const ws = new WebSocket('ws://172.24.82.41:12345');
+const ws = new WebSocket('ws://192.168.43.221:12347');
+//const ws = new WebSocket('ws://127.0.0.1:12347');
 console.log("WebSocket request sent");
 
 // 监听 WebSocket 的 onmessage 事件
@@ -66,18 +66,18 @@ ws.onmessage = function(event) {
 	//更新在线人数
 	else if(type === '00')
 	{
-		xq.updateOnlineNum(msg);
+		llq.updateOnlineNum(msg);
 	}
 	//匹配成功
 	else if(type === '10')
 	{
-		xq.cancelMatch(false);
+		llq.cancelMatch(false);
 		if(msg[0] === '0')
-			game.setTurn(true);
+			set_turn(true);
 		else
-			game.setTurn(false);
+			set_turn(false);
 		document.getElementById('b_usr').textContent = msg.slice(1);
-		xq.matchSuccess();
+		llq.matchSuccess();
 		//进入房间
 		/*initRoom();
 		clickRoom();
@@ -88,27 +88,34 @@ ws.onmessage = function(event) {
 	{
 		//console.log(event.data);
 		alert("对方掉线，比赛已终止");
-		game.stop();
+		com1.close();
+		//回到世界并关闭房间
 	}
 	//棋子移动
 	else if(type === '20')
 	{
-		game.chessMove(msg[0], msg[1], msg[2], msg[3]);
-		game.exchangeTurn();
+        let color = -play1.my
+		play1.clickPoint(msg.split(" ")[0], msg.split(" ")[1], color);
+		let x = msg.split(" ")[0];
+		let y = msg.split(" ")[1];
+		play1.opx = x;
+		play1.opy = y;
+		play1.optimes--;
+		if(play1.optimes==0)
+		{
+			turn_exchange();
+			play1.optimes=2;
+		}	
 	}
 	//游戏结束
 	else if(type === '21')
 	{
-		if(msg[0] === '1')
-		{
-			if(msg.length === 1)
-				alert("你赢了！");
-			else
-				alert("对方投降，你赢了！");
-		}
-		else if(msg[0] === '0')
+		if(msg === '1')
+			alert("你赢了！");
+		else if(msg === '0')
 			alert("你输了！")
-		game.stop();
+		com1.close();
+		//回到世界并关闭房间
 	}
 };
 
@@ -130,7 +137,7 @@ ws.onopen = function(event) {
     }
 
 	ws.send("30" + getCookieValue('username'));
-	xq.changeOnline(true);
+	llq.changeOnline(true);
     //ws.send(getIPAddress());
 };
 
@@ -138,14 +145,14 @@ ws.onopen = function(event) {
 ws.onerror = function(event) {
     // 发生错误，可以在这里进行相应的处理
     console.log("WebSocket error:", event);
-	xq.changeOnline(false);
+	llq.changeOnline(false);
 };
 
 // 监听 WebSocket 的 onclose 事件
 ws.onclose = function(event) {
     // WebSocket 连接关闭，可以在这里进行相应的处理
     console.log("WebSocket closed:", event);
-	xq.changeOnline(false);
+	llq.changeOnline(false);
 };
 
 // 获取公网ip
