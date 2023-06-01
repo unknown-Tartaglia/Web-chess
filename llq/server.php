@@ -215,7 +215,7 @@ function game_over(&$cur_client, &$room, &$room_list, &$r_key, $giveup)
 // 创建WebSocket服务器
 $server = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($server, SOL_SOCKET, SO_REUSEADDR, 1);
-socket_bind($server, '10.0.2.15', 12347);
+socket_bind($server, '0.0.0.0', 12347);
 socket_listen($server);
 
 $wuziBoard = [];

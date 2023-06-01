@@ -10,23 +10,36 @@
 
 ## Usage
 
-运行项目时修改每个游戏中js/websocket.js中的下列代码：
+运行项目时修改项目主目录的config.js使得ip_addr指向服务器
 
->const ws = new WebSocket('ws://xxx:12345');
+> ip_addr = "xxx"
 
-以及server.php中的下列代码：
+象棋、五子棋、连六棋默认使用端口12345、12346、12347
 
->socket_bind($server, '10.0.2.15', 12345);
+同时后台创建数据库chess,并且创建数据表user、xqRanking、wzqRanking、llqRanking、record
 
-修改后改为
+表段结构如下
 
->const ws = new WebSocket('ws://xxx:socket_port');
->
->socket_bind($server, 'server_ip', server_port);
+```
+//user
++-----+----------+----------+
+| uid | username | password |
++-----+----------+----------+
+//xxRanking
++----------+-------+------+-------+
+| username | score | wins | loses |
++----------+-------+------+-------+
+//record
++----+--------+--------+-----------+
+| id | user1  | user2  | type      |
++----+--------+--------+-----------+
+```
 
-修改ip(或者端口)保证客户端访问server_ip可以联络服务器。如果服务器在内网socket_bind使用服务器内网ip。
+其中uid和id为自增表段，id用作最近战绩倒计索引，uid暂无用处
 
-启动服务器执行`start_all.sh`即可
+启动服务器在主目录执行`./start_all.sh`即可
+
+关闭服务器执行`./stop_all.sh`
 
 ## Contributing
 
