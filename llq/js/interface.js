@@ -11,7 +11,11 @@ llq.online = false;
 llq.inMatch = false;
 llq.matchTime = 0;
 llq.text = document.getElementById('text');
+llq.inmatchgame=false;
 
+llq.get = function (id){
+	return document.getElementById(id)
+}
 
 llq.tipsAppear = function()
 {
@@ -102,6 +106,7 @@ llq.timingBackward = function(time)
     else
     {
         document.getElementById("matchingSuccessBar").style.visibility = "hidden";
+        llq.inmatchgame = true;
         com1.init();
         com1.initroom();
     }
@@ -285,3 +290,18 @@ llq.countTime = function(time, isMyCount)
         }
     }
 }
+
+llq.get("restartBtn").addEventListener("click", function(e) {
+	if (!llq.inmatchgame && confirm("是否确定要投降？")){
+		com.clear();
+		play.init();
+		ingame = false;
+		com.canvas.removeEventListener("click",play.clickCanvas);
+	}
+    if(llq.inmatchgame && in_game())
+    {
+        var ret = confirm("你确定要投降吗？");
+        if(ret === true)
+            ws.send("40");
+    }
+})

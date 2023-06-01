@@ -97,7 +97,7 @@ com1.initroom = function(){
 }
 
 com1.get("restartBtn").addEventListener("click", function(e) {
-	if(in_game())
+	if(wzq.inmatchgame && in_game())
     {
         var ret = confirm("你确定要投降吗？");
         if(ret === true)
@@ -107,7 +107,7 @@ com1.get("restartBtn").addEventListener("click", function(e) {
 
 com1.close = function()
 {
-	wzq.online = false;
+	wzq.inmatchgame = false;
 	com1.clear();
 	play1.init();
 	ingame = false;

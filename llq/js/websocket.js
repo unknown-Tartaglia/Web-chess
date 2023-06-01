@@ -110,9 +110,14 @@ ws.onmessage = function(event) {
 	//游戏结束
 	else if(type === '21')
 	{
-		if(msg === '1')
-			alert("你赢了！");
-		else if(msg === '0')
+		if(msg[0] === '1')
+		{
+			if(msg.length === 1)
+				alert("你赢了！");
+			else
+				alert("对方投降，你赢了！");
+		}
+		else if(msg[0] === '0')
 			alert("你输了！")
 		com1.close();
 		//回到世界并关闭房间

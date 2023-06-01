@@ -11,6 +11,7 @@ wzq.online = false;
 wzq.inMatch = false;
 wzq.matchTime = 0;
 wzq.text = document.getElementById('text');
+wzq.inmatchgame = false;
 
 
 wzq.tipsAppear = function()
@@ -102,6 +103,7 @@ wzq.timingBackward = function(time)
     else
     {
         document.getElementById("matchingSuccessBar").style.visibility = "hidden";
+        wzq.inmatchgame = true;
         com1.init();
         com1.initroom();
     }

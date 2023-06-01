@@ -67,14 +67,6 @@ com.initroom = function(level){
 	})
 }
 
-com.get("restartBtn").addEventListener("click", function(e) {
-	if (confirm("是否确定要退出？")){
-		com.clear();
-		play.init();
-		ingame = false;
-		com.canvas.removeEventListener("click",play.clickCanvas);
-	}
-})
 
 com.close = function()
 {

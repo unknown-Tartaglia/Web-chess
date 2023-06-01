@@ -68,7 +68,7 @@ com.initroom = function(level){
 }
 
 com.get("restartBtn").addEventListener("click", function(e) {
-	if (confirm("是否确定要投降？")){
+	if (!wzq.inmatchgame && confirm("是否确定要投降？")){
 		com.clear();
 		play.init();
 		ingame = false;

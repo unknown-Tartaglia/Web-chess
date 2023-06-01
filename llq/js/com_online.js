@@ -99,19 +99,10 @@ com1.initroom = function(){
 
 }
 
-com1.get("restartBtn").addEventListener("click", function(e) {
-	if(in_game())
-    {
-        var ret = confirm("你确定要投降吗？");
-        if(ret === true)
-            ws.send("40");
-    }
-})
-
 
 com1.close = function()
 {
-	llq.online = false;
+	llq.inmatchgame = false;
 	com1.clear();
 	play1.init();
 	ingame = false;
