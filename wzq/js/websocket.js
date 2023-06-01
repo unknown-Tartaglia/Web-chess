@@ -37,8 +37,8 @@
 
 */
 
-const ws = new WebSocket('ws://192.168.43.221:12346');
-//const ws = new WebSocket('ws://127.0.0.1:12346');
+// const ws = new WebSocket('ws://192.168.43.221:12346');
+const ws = new WebSocket('ws://' + ip_addr + ':12346');
 console.log("WebSocket request sent");
 
 // 监听 WebSocket 的 onmessage 事件

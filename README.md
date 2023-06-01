@@ -20,13 +20,13 @@
 
 修改后改为
 
->const ws = new WebSocket('ws://server_ip:socket_port');
+>const ws = new WebSocket('ws://xxx:socket_port');
 >
 >socket_bind($server, 'server_ip', server_port);
 
 修改ip(或者端口)保证客户端访问server_ip可以联络服务器。如果服务器在内网socket_bind使用服务器内网ip。
 
-启动服务器执行`php server.php`即可
+启动服务器执行`start_all.sh`即可
 
 ## Contributing
 
