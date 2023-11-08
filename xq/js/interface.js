@@ -6,6 +6,7 @@ xq.alertSound = new Audio("./sound/alert.mp3");
 xq.eatSound = new Audio("./sound/eat.mp3");
 xq.moveSound = new Audio("./sound/move.mp3");
 xq.selectSound = new Audio("./sound/select.mp3");
+xq.timeAlertSound = new Audio("./sound/timeAlert.mp3");
 xq.isPlayingBgm = false;
 xq.online = false;
 xq.inMatch = false;
@@ -215,7 +216,10 @@ xq.countTime = function(time, isMyCount)
     if(time > 0)
     {
         if(game.isInTurn())
+        {
             document.getElementById('r_time').textContent = time + 's';
+            if(time == 15) xq.playSound('timeAlert');
+        }
         else
             document.getElementById('b_time').textContent = time + 's';
         time--;
@@ -240,6 +244,8 @@ xq.playSound = function(str)
         xq.moveSound.play();
     else if(str === 'select')
         xq.selectSound.play();
+    else if(str === 'timeAlert')
+        xq.timeAlertSound.play();
     else
         console.assert(false, "bad sound play!");
 }
